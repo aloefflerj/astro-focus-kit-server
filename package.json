@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx json-server --watch db.json -H 0.0.0.0 --port 8000 --ro true"
+    "dev": "npx json-server --watch db.json -H 0.0.0.0 --port 8000 --ro true",
+    "start": "node server.js"
   },
   "keywords": [
     "procrsatination",
