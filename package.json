@@ -4,16 +4,35 @@
   "description": "Astro Focus Kit Server - Academic application that tries to solve procrastination",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node dist/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aloefflerj/astro-focus-kit-server.git"
   },
+  "keywords": [
+    "node",
+    "nodejs",
+    "typescript",
+    "api",
+    "procrastination",
+    "productivity",
+    "todo"
+  ],
   "author": "Anderson Job Loeffler",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/aloefflerj/astro-focus-kit-server/issues"
   },
-  "homepage": "https://github.com/aloefflerj/astro-focus-kit-server#readme"
+  "homepage": "https://github.com/aloefflerj/astro-focus-kit-server#readme",
+  "devDependencies": {
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "^18.11.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.2"
+  }
 }
