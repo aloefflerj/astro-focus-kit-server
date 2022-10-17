@@ -11,6 +11,7 @@
     "test:functional": "jest --projects ./test --runInBand",
     "lint": "eslint ./src ./test --ext .ts",
     "lint:fix": "eslint ./src ./test --ext .ts --fix",
+    "prettier:check": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --check",
     "prettier:format": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --write",
     "prettier:watch": "onchange 'src/**/*.ts' 'test/**/*.ts' -- prettier --write {{changed}}"
   },
