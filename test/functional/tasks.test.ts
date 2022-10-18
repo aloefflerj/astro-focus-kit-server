@@ -16,26 +16,26 @@ describe('Tasks functional tests', () => {
     });
   });
 
-  describe('When creating a task', () => {
-    it('should create a task with success', async () => {
-      const newTask = {
-        id: '12345678910',
-        order: 20,
-        title: 'study',
-        type: 'binary',
-        status: 'todo',
-        urgent: false,
-        important: false,
-        description: null,
-        registerDate: '2022/10/17',
-        conclusionDate: null,
-      };
+  // describe('When creating a task', () => {
+  //   it('should create a task with success', async () => {
+  //     const newTask = {
+  //       id: '12345678910',
+  //       order: 20,
+  //       title: 'study',
+  //       type: 'binary',
+  //       status: 'todo',
+  //       urgent: false,
+  //       important: false,
+  //       description: null,
+  //       registerDate: '2022/10/17',
+  //       conclusionDate: null,
+  //     };
 
-      const response = await global.testRequest.post('/tasks').send(newTask);
-      expect(response.status).toBe(201);
-      expect(response.body).toEqual(newTask);
-    });
-  });
+  //     const response = await global.testRequest.post('/tasks').send(newTask);
+  //     expect(response.status).toBe(201);
+  //     expect(response.body).toEqual(newTask);
+  //   });
+  // });
 });
 
 // export interface ITask {
