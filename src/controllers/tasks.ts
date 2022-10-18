@@ -7,12 +7,28 @@ export class TasksController {
   public getTasksForLoggedUser(_: Request, res: Response): void {
     res.send([
       {
-        id: '12345',
-        task: 'study',
+        id: '1',
+        order: 2,
+        title: 'piano',
+        type: 'binary',
+        status: 'todo',
+        urgent: false,
+        important: false,
+        description: null,
+        registerDate: '2022/10/17',
+        conclusionDate: null,
       },
       {
-        id: '678910',
-        task: 'read',
+        id: '3',
+        order: 3,
+        title: 'painting',
+        type: 'binary',
+        status: 'todo',
+        urgent: false,
+        important: false,
+        description: null,
+        registerDate: '2022/10/18',
+        conclusionDate: null,
       },
     ]);
   }

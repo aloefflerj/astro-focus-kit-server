@@ -5,12 +5,28 @@ describe('Tasks functional tests', () => {
       expect(status).toEqual(200);
       expect(body).toEqual([
         {
-          id: '12345',
-          task: 'study',
+          id: '1',
+          order: 2,
+          title: 'piano',
+          type: 'binary',
+          status: 'todo',
+          urgent: false,
+          important: false,
+          description: null,
+          registerDate: '2022/10/17',
+          conclusionDate: null,
         },
         {
-          id: '678910',
-          task: 'read',
+          id: '3',
+          order: 3,
+          title: 'painting',
+          type: 'binary',
+          status: 'todo',
+          urgent: false,
+          important: false,
+          description: null,
+          registerDate: '2022/10/18',
+          conclusionDate: null,
         },
       ]);
     });
@@ -19,15 +35,15 @@ describe('Tasks functional tests', () => {
   // describe('When creating a task', () => {
   //   it('should create a task with success', async () => {
   //     const newTask = {
-  //       id: '12345678910',
-  //       order: 20,
+  //       id: '3',
+  //       order: 3,
   //       title: 'study',
   //       type: 'binary',
   //       status: 'todo',
   //       urgent: false,
   //       important: false,
   //       description: null,
-  //       registerDate: '2022/10/17',
+  //       registerDate: '2022/10/19',
   //       conclusionDate: null,
   //     };
 
@@ -37,16 +53,3 @@ describe('Tasks functional tests', () => {
   //   });
   // });
 });
-
-// export interface ITask {
-//   id: string;
-//   order: number;
-//   title: string;
-//   type: 'binary' | 'timer' | 'pomodoro';
-//   status: 'onCourse' | 'done' | 'todo';
-//   urgent: boolean;
-//   important: boolean;
-//   description?: string;
-//   registerDate: string;
-//   conclusionDate?: string;
-// }
