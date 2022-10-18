@@ -7,7 +7,7 @@ jest.mock('axios');
 
 describe('ZenQuotes client', () => {
   it('should return the normalized quote from the ZenQuotes service', async () => {
-    axios.get = jest.fn().mockResolvedValue(zenQuotesFixture);
+    axios.get = jest.fn().mockResolvedValue({ data: zenQuotesFixture });
     const zenQuotes = new ZenQuotes(axios);
     const response = await zenQuotes.fetchRandomQuote();
 
