@@ -1,4 +1,4 @@
-import { Controller, Get } from '@overnightjs/core';
+import { Controller, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 
 @Controller('tasks')
@@ -31,5 +31,10 @@ export class TasksController {
         conclusionDate: null,
       },
     ]);
+  }
+
+  @Post('')
+  public async create(req: Request, res: Response): Promise<void> {
+    res.status(201).send(req.body);
   }
 }
