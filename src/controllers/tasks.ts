@@ -7,8 +7,12 @@ import mongoose from 'mongoose';
 export class TasksController {
   @Get('')
   public async getTasksForLoggedUser(_: Request, res: Response): Promise<void> {
-    const tasks = await Task.find({});
-    res.status(200).send(tasks);
+    try {
+      const tasks = await Task.find({});
+      res.status(200).send(tasks);
+    } catch (error) {
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
   }
 
   @Post('')
