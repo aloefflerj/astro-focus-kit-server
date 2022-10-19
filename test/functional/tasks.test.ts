@@ -1,4 +1,8 @@
+import { Task } from '@src/models/task';
+
 describe('Tasks functional tests', () => {
+  beforeAll(async () => await Task.deleteMany({}));
+
   describe('When fetching tasks', () => {
     it('should return a task', async () => {
       const { body, status } = await global.testRequest.get('/tasks');
