@@ -6,7 +6,7 @@
       "pass": "root",
       "host": "localhost",
       "port": "27017",
-      "db": "astrofocuskit",
+      "db": "astrofocuskit_test",
       "authSource": "admin"
     }
   }
