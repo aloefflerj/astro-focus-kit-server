@@ -5,6 +5,7 @@ import { Application } from 'express';
 import { TasksController } from './controllers/tasks';
 import cors from 'cors';
 import * as database from '@src/database';
+import { UsersController } from './controllers/users';
 
 export class SetupServer extends Server {
   constructor(private port = 3000 || process.env.port) {
@@ -27,8 +28,9 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const taskControler = new TasksController();
-    this.addControllers([taskControler]);
+    const tasksController = new TasksController();
+    const usersController = new UsersController();
+    this.addControllers([tasksController, usersController]);
   }
 
   private async databaseSetup(): Promise<void> {
