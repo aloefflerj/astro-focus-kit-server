@@ -54,5 +54,24 @@ describe('Tasks functional tests', () => {
       expect(response.status).toBe(201);
       expect(response.body).toEqual(expect.objectContaining(newTask));
     });
+
+    it('should return 422 when there is a validation error', async () => {
+      const newTask = {
+        order: 3,
+        title: 'study',
+        type: 'binary',
+        status: 'todo',
+        urgent: 'THIS IS NOT A VALID VALUE',
+        important: false,
+        description: null,
+        registerDate: '2022-10-19T03:00:00.000Z',
+        conclusionDate: null,
+      };
+      const response = await global.testRequest.post('/tasks').send(newTask);
+      expect(response.status).toBe(422);
+      expect(response.body).toEqual({
+        error: `Task validation failed. urgent: Cast to Boolean failed for value "THIS IS NOT A VALID VALUE" at path "urgent"`,
+      });
+    });
   });
 });
