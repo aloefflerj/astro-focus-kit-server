@@ -1,7 +1,12 @@
 {
   "App": {
     "database": {
-      "mongoUrl": "mongodb://localhost:27017/astrofocuskit"
+      "user": "root",
+      "pass": "root",
+      "host": "localhost",
+      "port": "27017",
+      "db": "astrofocuskit",
+      "authSource": "admin"
     }
   }
 }
