@@ -2,36 +2,37 @@ import { Task } from '@src/models/task';
 
 describe('Tasks functional tests', () => {
   beforeAll(async () => await Task.deleteMany({}));
-
+  beforeEach(async () => {
+    const defaultTask = {
+      order: 2,
+      title: 'piano',
+      type: 'binary',
+      status: 'todo',
+      urgent: false,
+      important: false,
+      description: null,
+      registerDate: '2022/10/17',
+      conclusionDate: null,
+    };
+    const task = new Task(defaultTask);
+    await task.save();
+  });
   describe('When fetching tasks', () => {
     it('should return a task', async () => {
       const { body, status } = await global.testRequest.get('/tasks');
       expect(status).toEqual(200);
       expect(body).toEqual([
-        {
-          id: '1',
+        expect.objectContaining({
           order: 2,
-          title: 'piano',
+          title: 'study',
           type: 'binary',
           status: 'todo',
           urgent: false,
           important: false,
           description: null,
-          registerDate: '2022/10/17',
+          registerDate: '2022-10-17T03:00:00.000Z',
           conclusionDate: null,
-        },
-        {
-          id: '3',
-          order: 3,
-          title: 'painting',
-          type: 'binary',
-          status: 'todo',
-          urgent: false,
-          important: false,
-          description: null,
-          registerDate: '2022/10/18',
-          conclusionDate: null,
-        },
+        }),
       ]);
     });
   });
