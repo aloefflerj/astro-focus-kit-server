@@ -1,4 +1,5 @@
 import { Controller, Get, Post } from '@overnightjs/core';
+import { Task } from '@src/models/task';
 import { Request, Response } from 'express';
 
 @Controller('tasks')
@@ -35,6 +36,8 @@ export class TasksController {
 
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
-    res.status(201).send(req.body);
+    const task = new Task(req.body);
+    const result = await task.save();
+    res.status(201).send(result);
   }
 }
