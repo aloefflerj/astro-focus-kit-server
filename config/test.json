@@ -1,0 +1,13 @@
+{
+  "App": {
+    "port": 3000,
+    "database": {
+      "user": "root",
+      "pass": "root",
+      "host": "localhost",
+      "port": "27017",
+      "db": "astrofocuskit_test",
+      "authSource": "admin"
+    }
+  }
+}
