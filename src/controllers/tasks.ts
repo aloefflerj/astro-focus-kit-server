@@ -6,33 +6,9 @@ import mongoose from 'mongoose';
 @Controller('tasks')
 export class TasksController {
   @Get('')
-  public getTasksForLoggedUser(_: Request, res: Response): void {
-    res.send([
-      {
-        id: '1',
-        order: 2,
-        title: 'piano',
-        type: 'binary',
-        status: 'todo',
-        urgent: false,
-        important: false,
-        description: null,
-        registerDate: '2022/10/17',
-        conclusionDate: null,
-      },
-      {
-        id: '3',
-        order: 3,
-        title: 'painting',
-        type: 'binary',
-        status: 'todo',
-        urgent: false,
-        important: false,
-        description: null,
-        registerDate: '2022/10/18',
-        conclusionDate: null,
-      },
-    ]);
+  public async getTasksForLoggedUser(_: Request, res: Response): Promise<void> {
+    const tasks = await Task.find({});
+    res.status(200).send(tasks);
   }
 
   @Post('')
