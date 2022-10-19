@@ -70,7 +70,7 @@ describe('Tasks functional tests', () => {
       const response = await global.testRequest.post('/tasks').send(newTask);
       expect(response.status).toBe(422);
       expect(response.body).toEqual({
-        error: `Task validation failed. urgent: Cast to Boolean failed for value "THIS IS NOT A VALID VALUE" at path "urgent"`,
+        error: `Task validation failed: urgent: Cast to Boolean failed for value "THIS IS NOT A VALID VALUE" (type string) at path "urgent" because of "CastError"`,
       });
     });
   });
