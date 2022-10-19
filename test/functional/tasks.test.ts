@@ -42,7 +42,7 @@ describe('Tasks functional tests', () => {
         urgent: false,
         important: false,
         description: null,
-        registerDate: '2022/10/19',
+        registerDate: '2022-10-19T03:00:00.000Z',
         conclusionDate: null,
       };
 
