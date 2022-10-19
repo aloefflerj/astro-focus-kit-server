@@ -4,7 +4,7 @@
     "database": {
       "user": "root",
       "pass": "root",
-      "host": "localhost",
+      "host": "db-astro",
       "port": "27017",
       "db": "astrofocuskit_test",
       "authSource": "admin"
