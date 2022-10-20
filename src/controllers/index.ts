@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
 
 export abstract class BaseController {
