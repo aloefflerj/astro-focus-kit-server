@@ -1,4 +1,4 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface ITask {
   _id?: string;
@@ -24,6 +24,7 @@ const schema = new mongoose.Schema(
     description: { type: String, required: false },
     registerDate: { type: Date, required: true },
     conclusionDate: { type: Date, required: false },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
     toJSON: {
