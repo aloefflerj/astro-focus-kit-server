@@ -15,7 +15,12 @@ export class UsersController extends BaseController {
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
         this.sendCreatedUpdateErrorResponse(res, error);
+        return;
       }
+      res.status(409).send({
+        code: 409,
+        error: 'User validation failed: name: Path `name` is required.',
+      });
     }
   }
 }
