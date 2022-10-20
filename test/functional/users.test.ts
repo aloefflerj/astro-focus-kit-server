@@ -25,7 +25,7 @@ describe('Users functional tests with encrypted password', () => {
       );
     });
 
-    it('should return 400 when there is a validation error', async () => {
+    it('should return 422 when there is a validation error', async () => {
       const newUser = {
         //empty name
         email: 'dovahkiin@skyrim.com',
