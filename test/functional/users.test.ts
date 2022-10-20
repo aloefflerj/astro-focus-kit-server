@@ -55,4 +55,22 @@ describe('Users functional tests with encrypted password', () => {
       });
     });
   });
+
+  describe('When authenticating a user', () => {
+    it('should generate a token for a valid user', async () => {
+      const newUser = {
+        name: 'dovahkiin',
+        email: 'dovahkiin@skyrim.com',
+        password: '12345',
+      };
+      await new User(newUser).save();
+      const response = await global.testRequest
+        .post('/users/auth')
+        .send({ email: newUser.email, password: newUser.password });
+
+      expect(response.body).toEqual(
+        expect.objectContaining({ token: expect.any(String) })
+      );
+    });
+  });
 });
