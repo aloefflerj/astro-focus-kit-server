@@ -2,9 +2,10 @@ import { Controller, Get, Post } from '@overnightjs/core';
 import { Task } from '@src/models/task';
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import { BaseController } from '.';
 
 @Controller('tasks')
-export class TasksController {
+export class TasksController extends BaseController {
   @Get('')
   public async getTasksForLoggedUser(_: Request, res: Response): Promise<void> {
     try {
@@ -23,9 +24,7 @@ export class TasksController {
       res.status(201).send(result);
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        res.status(422).send({ code: 422, error: error.message });
-      } else {
-        res.status(500).send({ code: 500, error: 'Internal Server Error' });
+        this.sendCreatedUpdateErrorResponse(res, error);
       }
     }
   }
