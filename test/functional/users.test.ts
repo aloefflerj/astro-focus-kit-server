@@ -1,4 +1,5 @@
 import { User } from '@src/models/user';
+import { StatusCodes } from 'http-status-codes';
 
 describe('Users functional tests', () => {
   beforeEach(async () => await User.deleteMany({}));
@@ -22,8 +23,9 @@ describe('Users functional tests', () => {
         password: '12345',
       };
       const response = await global.testRequest.post('/users').send(newUser);
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
       expect(response.body).toEqual({
+        code: StatusCodes.UNPROCESSABLE_ENTITY,
         error: 'User validation failed: name: Path `name` is required.',
       });
     });
