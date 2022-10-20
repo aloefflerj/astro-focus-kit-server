@@ -24,7 +24,7 @@ export class TasksController extends BaseController {
       res.status(201).send(result);
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        this.sendCreatedUpdateErrorResponse(res, error);
+        this.sendCreateUpdateErrorResponse(res, error);
       }
     }
   }

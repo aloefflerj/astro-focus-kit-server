@@ -14,7 +14,7 @@ export class UsersController extends BaseController {
       res.status(201).send(newUser);
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        this.sendCreatedUpdateErrorResponse(res, error);
+        this.sendCreateUpdateErrorResponse(res, error);
         return;
       }
       res.status(409).send({

@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
 
 export abstract class BaseController {
-  protected sendCreatedUpdateErrorResponse(
+  protected sendCreateUpdateErrorResponse(
     res: Response,
     error: mongoose.Error.ValidationError | Error
   ): void {
