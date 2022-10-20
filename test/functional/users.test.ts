@@ -30,7 +30,7 @@ describe('Users functional tests', () => {
       });
     });
 
-    it('shoudl return 409 when the return email already exists', async () => {
+    it('should return 409 when the return email already exists', async () => {
       const newUser = {
         name: 'dovahkiin',
         email: 'dovahkiin@skyrim.com',
@@ -40,7 +40,7 @@ describe('Users functional tests', () => {
       const response = await global.testRequest.post('/users').send(newUser);
 
       expect(response.status).toBe(StatusCodes.CONFLICT);
-      expect(response.body.error).toBe({
+      expect(response.body).toEqual({
         code: StatusCodes.CONFLICT,
         error: 'User validation failed: email: already exists in the database.',
       });
