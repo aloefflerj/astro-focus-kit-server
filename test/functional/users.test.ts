@@ -40,9 +40,10 @@ describe('Users functional tests', () => {
       const response = await global.testRequest.post('/users').send(newUser);
 
       expect(response.status).toBe(StatusCodes.CONFLICT);
-      expect(response.body.error).toBe(
-        'User validation failed: email: already exists in the database.'
-      );
+      expect(response.body.error).toBe({
+        code: StatusCodes.CONFLICT,
+        error: 'User validation failed: email: already exists in the database.',
+      });
     });
   });
 });
