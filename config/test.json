@@ -1,6 +1,9 @@
 {
   "App": {
-    "port": 3000,
+    "auth": {
+      "key": "some-key_test",
+      "tokenExpiresIn": "20000000"
+    },
     "database": {
       "user": "root",
       "pass": "root",
@@ -8,6 +11,7 @@
       "port": "27017",
       "db": "astrofocuskit_test",
       "authSource": "admin"
-    }
+    },
+    "port": 3000
   }
 }
