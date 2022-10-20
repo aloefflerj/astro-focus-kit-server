@@ -2,6 +2,7 @@ import { Controller, Post } from '@overnightjs/core';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
 import { BaseController } from '.';
 
@@ -26,19 +27,24 @@ export class UsersController extends BaseController {
   }
 
   @Post('auth')
-  public async auth(req: Request, res: Response): Promise<void> {
+  public async auth(
+    req: Request,
+    res: Response
+  ): Promise<Response | undefined> {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {
-      // todo => handle user not found
-      return;
+      return res.status(StatusCodes.UNAUTHORIZED).send({
+        code: StatusCodes.UNAUTHORIZED,
+        error: 'User not found!',
+      });
     }
 
-    if (!(await AuthService.comparePasswords(password, user.password))) {
-      // todo => handle wrong password
-      return;
-    }
+    // if (!(await AuthService.comparePasswords(password, user.password))) {
+    //   // todo => handle wrong password
+    //   return;
+    // }
     const token = AuthService.generateToken(user.toJSON());
-    res.status(200).send({ token: token });
+    return res.status(200).send({ token: token });
   }
 }
