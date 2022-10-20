@@ -23,9 +23,9 @@ export class TasksController {
       res.status(201).send(result);
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
-        res.status(422).send({ error: error.message });
+        res.status(422).send({ code: 422, error: error.message });
       } else {
-        res.status(500).send({ error: 'Internal Server Error' });
+        res.status(500).send({ code: 500, error: 'Internal Server Error' });
       }
     }
   }
