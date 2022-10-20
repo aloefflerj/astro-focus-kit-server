@@ -40,10 +40,12 @@ export class UsersController extends BaseController {
       });
     }
 
-    // if (!(await AuthService.comparePasswords(password, user.password))) {
-    //   // todo => handle wrong password
-    //   return;
-    // }
+    if (!(await AuthService.comparePasswords(password, user.password))) {
+      return res.status(StatusCodes.UNAUTHORIZED).send({
+        code: StatusCodes.UNAUTHORIZED,
+        error: 'Password does not match!',
+      });
+    }
     const token = AuthService.generateToken(user.toJSON());
     return res.status(200).send({ token: token });
   }
