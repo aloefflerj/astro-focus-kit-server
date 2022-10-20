@@ -80,5 +80,19 @@ describe('Users functional tests with encrypted password', () => {
 
       expect(response.status).toBe(401);
     });
+
+    it('should return UNAUTHORIZED if the user is found but the password does not match', async () => {
+      const newUser = {
+        name: 'dovahkiin',
+        email: 'dovahkiin@skyrim.com',
+        password: '12345',
+      };
+      await new User(newUser).save();
+      const response = await global.testRequest
+        .post('/users/auth')
+        .send({ email: newUser.email, password: 'wrong password' });
+
+      expect(response.status).toBe(401);
+    });
   });
 });
