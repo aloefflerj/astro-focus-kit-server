@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
 
 export abstract class BaseController {
@@ -7,9 +8,14 @@ export abstract class BaseController {
     error: mongoose.Error.ValidationError | Error
   ): void {
     if (error instanceof mongoose.Error.ValidationError) {
-      res.status(422).send({ code: 422, error: error.message });
+      res
+        .status(StatusCodes.UNPROCESSABLE_ENTITY)
+        .send({ code: StatusCodes.UNPROCESSABLE_ENTITY, error: error.message });
     } else {
-      res.status(500).send({ code: 500, error: 'Internal Server Error' });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: 'Internal Server Error',
+      });
     }
   }
 }
