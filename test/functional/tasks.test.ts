@@ -1,5 +1,6 @@
 import { Task } from '@src/models/task';
 import taskResponseFixture from '@test/fixtures/taskResponseFixture.json';
+import { StatusCodes } from 'http-status-codes';
 
 describe('Tasks functional tests', () => {
   beforeAll(async () => await Task.deleteMany({}));
@@ -42,8 +43,9 @@ describe('Tasks functional tests', () => {
       const response = await global.testRequest
         .post('/tasks')
         .send(invalidValue);
-      expect(response.status).toBe(422);
+      expect(response.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
       expect(response.body).toEqual({
+        code: StatusCodes.UNPROCESSABLE_ENTITY,
         error: `Task validation failed: urgent: Cast to Boolean failed for value "THIS IS NOT A VALID VALUE" (type string) at path "urgent" because of "CastError"`,
       });
     });
