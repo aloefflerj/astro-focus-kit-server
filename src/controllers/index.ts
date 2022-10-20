@@ -13,21 +13,17 @@ export abstract class BaseController {
         (err) => err.kind === CUSTOM_VALIDATION.DUPLICATED
       );
 
-      if (duplicatedKindErrors.length) {
-        res
-          .status(StatusCodes.CONFLICT)
-          .send({ code: StatusCodes.CONFLICT, error: error.message });
-      } else {
+      if (!duplicatedKindErrors.length) {
         res.status(StatusCodes.UNPROCESSABLE_ENTITY).send({
           code: StatusCodes.UNPROCESSABLE_ENTITY,
           error: error.message,
         });
+        return;
       }
-    } else {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-        code: StatusCodes.INTERNAL_SERVER_ERROR,
-        error: 'Internal Server Error',
-      });
+
+      res
+        .status(StatusCodes.CONFLICT)
+        .send({ code: StatusCodes.CONFLICT, error: error.message });
     }
   }
 }
