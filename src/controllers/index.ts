@@ -9,21 +9,26 @@ export abstract class BaseController {
     error: mongoose.Error.ValidationError | Error
   ): void {
     if (error instanceof mongoose.Error.ValidationError) {
-      const duplicatedKindErrors = Object.values(error.errors).filter(
-        (err) => err.kind === CUSTOM_VALIDATION.DUPLICATED
-      );
-
-      if (!duplicatedKindErrors.length) {
-        res.status(StatusCodes.UNPROCESSABLE_ENTITY).send({
-          code: StatusCodes.UNPROCESSABLE_ENTITY,
-          error: error.message,
-        });
-        return;
-      }
-
-      res
-        .status(StatusCodes.CONFLICT)
-        .send({ code: StatusCodes.CONFLICT, error: error.message });
+      const clientErrors = this.handleClientErrors(error);
+      res.status(clientErrors.code).send(clientErrors);
     }
+  }
+
+  private handleClientErrors(error: mongoose.Error.ValidationError): {
+    code: number;
+    error: string;
+  } {
+    const duplicatedKindErrors = Object.values(error.errors).filter(
+      (err) => err.kind === CUSTOM_VALIDATION.DUPLICATED
+    );
+
+    if (!duplicatedKindErrors.length) {
+      return {
+        code: StatusCodes.UNPROCESSABLE_ENTITY,
+        error: error.message,
+      };
+    }
+
+    return { code: StatusCodes.CONFLICT, error: error.message };
   }
 }
