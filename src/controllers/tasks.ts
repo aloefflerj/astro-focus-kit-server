@@ -10,9 +10,12 @@ import { BaseController } from '.';
 @ClassMiddleware(authMiddleware)
 export class TasksController extends BaseController {
   @Get('')
-  public async getTasksForLoggedUser(_: Request, res: Response): Promise<void> {
+  public async getTasksForLoggedUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     try {
-      const tasks = await Task.find({});
+      const tasks = await Task.find({ user: req.decoded?.id });
       res.status(StatusCodes.OK).send(tasks);
       return;
     } catch (error) {
