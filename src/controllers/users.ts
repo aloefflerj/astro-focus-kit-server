@@ -13,17 +13,19 @@ export class UsersController extends BaseController {
     try {
       const user = new User(req.body);
       const newUser = await user.save();
-      res.status(201).send(newUser);
+      res.status(StatusCodes.CREATED).send(newUser);
+      return;
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
         this.sendCreateUpdateErrorResponse(res, error);
         return;
       }
-      res.status(409).send({
-        code: 409,
+      res.status(StatusCodes.CONFLICT).send({
+        code: StatusCodes.CONFLICT,
         error: 'User validation failed: name: Path `name` is required.',
       });
     }
+    this.internalServerError(res);
   }
 
   @Post('auth')
@@ -47,6 +49,6 @@ export class UsersController extends BaseController {
       });
     }
     const token = AuthService.generateToken(user.toJSON());
-    return res.status(200).send({ ...user.toJSON(), ...{ token } });
+    return res.status(StatusCodes.OK).send({ ...user.toJSON(), ...{ token } });
   }
 }

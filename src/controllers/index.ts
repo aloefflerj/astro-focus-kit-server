@@ -36,4 +36,11 @@ export abstract class BaseController {
 
     return { code: StatusCodes.CONFLICT, error: error.message };
   }
+
+  protected internalServerError(res: Response): void {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      code: StatusCodes.INTERNAL_SERVER_ERROR,
+      error: 'Internal Server Error',
+    });
+  }
 }
