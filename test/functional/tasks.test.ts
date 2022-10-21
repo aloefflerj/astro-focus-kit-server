@@ -2,6 +2,7 @@ import { Task } from '@src/models/task';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import taskResponseFixture from '@test/fixtures/taskResponseFixture.json';
+import tasksResponseFixtures from '@test/fixtures/tasksResponseFixture.json';
 import { StatusCodes } from 'http-status-codes';
 
 describe('Tasks functional tests', () => {
@@ -19,16 +20,6 @@ describe('Tasks functional tests', () => {
     token = AuthService.generateToken(user.toJSON());
   });
 
-  // describe('When fetching tasks', () => {
-  //   it('should return a task', async () => {
-  //     const { body, status } = await global.testRequest
-  //       .get('/tasks')
-  //       .set({ 'x-access-token': token });
-  //     expect(status).toEqual(200);
-  //     expect(body).toEqual([expect.objectContaining(taskResponseFixture)]);
-  //   });
-  // });
-
   describe('When creating a task', () => {
     it('should create a task with success', async () => {
       const response = await global.testRequest
@@ -39,6 +30,30 @@ describe('Tasks functional tests', () => {
       expect(response.body).toEqual(
         expect.objectContaining(taskResponseFixture)
       );
+    });
+
+    describe('When fetching tasks from a given user', () => {
+      it('should return user tasks', async () => {
+        await global.testRequest
+          .post('/tasks')
+          .set({ 'x-access-token': token })
+          .send(tasksResponseFixtures[0]);
+
+        await global.testRequest
+          .post('/tasks')
+          .set({ 'x-access-token': token })
+          .send(tasksResponseFixtures[1]);
+
+        const { body, status } = await global.testRequest
+          .get('/tasks')
+          .set({ 'x-access-token': token });
+        expect(status).toEqual(StatusCodes.OK);
+
+        expect(body).toEqual([
+          expect.objectContaining(tasksResponseFixtures[0]),
+          expect.objectContaining(tasksResponseFixtures[1]),
+        ]);
+      });
     });
 
     it('should return 422 when there is a validation error', async () => {
