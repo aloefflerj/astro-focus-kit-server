@@ -11,7 +11,12 @@ export abstract class BaseController {
     if (error instanceof mongoose.Error.ValidationError) {
       const clientErrors = this.handleClientErrors(error);
       res.status(clientErrors.code).send(clientErrors);
+      return;
     }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      error: 'Internal Server Error',
+    });
   }
 
   private handleClientErrors(error: mongoose.Error.ValidationError): {

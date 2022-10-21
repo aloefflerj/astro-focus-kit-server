@@ -27,7 +27,9 @@ export class TasksController extends BaseController {
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
         this.sendCreateUpdateErrorResponse(res, error);
+        return;
       }
+      res.status(500).send({ code: 500, error: 'Internal Server Error' });
     }
   }
 }
