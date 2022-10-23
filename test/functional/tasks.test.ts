@@ -124,7 +124,7 @@ describe('Tasks functional tests', () => {
 
     it(`should reorder all tasks from both source and destination 
         days when reordering is made from one day to another`, async () => {
-      await global.testRequest
+      const response = await global.testRequest
         .post('/tasks')
         .set({ 'x-access-token': token })
         .send(tasksResponseFixtures[0]);
@@ -134,24 +134,26 @@ describe('Tasks functional tests', () => {
         .set({ 'x-access-token': token })
         .send(tasksResponseFixtures[1]);
 
-      const firstTaskOnAnotherDay = tasksResponseFixtures[0];
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(newTask);
+
+      const firstTaskOnAnotherDay = { ...tasksResponseFixtures[0] };
       firstTaskOnAnotherDay.registerDate = '2022-10-18T03:00:00.000Z';
+      firstTaskOnAnotherDay.title = 'draw';
       await global.testRequest
         .post('/tasks')
         .set({ 'x-access-token': token })
         .send(firstTaskOnAnotherDay);
 
-      const secondTaskOnAnotherDay = tasksResponseFixtures[1];
+      const secondTaskOnAnotherDay = { ...tasksResponseFixtures[1] };
       secondTaskOnAnotherDay.registerDate = '2022-10-18T03:00:00.000Z';
+      secondTaskOnAnotherDay.title = 'send important email';
       await global.testRequest
         .post('/tasks')
         .set({ 'x-access-token': token })
         .send(secondTaskOnAnotherDay);
-
-      const response = await global.testRequest
-        .post('/tasks')
-        .set({ 'x-access-token': token })
-        .send(newTask);
 
       const { body, status } = await global.testRequest
         .patch(`/tasks/reorder/${response.body.id}`)
@@ -160,7 +162,13 @@ describe('Tasks functional tests', () => {
 
       expect(status).toEqual(StatusCodes.OK);
       expect(body).toEqual([
-        expect.objectContaining({ ...newTask, order: 1 }),
+        expect.objectContaining({ ...tasksResponseFixtures[1], order: 1 }),
+        expect.objectContaining({ ...newTask, order: 2 }),
+        expect.objectContaining({
+          ...tasksResponseFixtures[0],
+          registerDate: '2022-10-18T03:00:00.000Z',
+          order: 1,
+        }),
         expect.objectContaining({ ...firstTaskOnAnotherDay, order: 2 }),
         expect.objectContaining({ ...secondTaskOnAnotherDay, order: 3 }),
       ]);
