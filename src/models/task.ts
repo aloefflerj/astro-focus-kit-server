@@ -37,5 +37,5 @@ const schema = new mongoose.Schema(
   }
 );
 
-interface TaskModel extends Omit<ITask, '_id'>, Document {}
+export interface TaskModel extends Omit<ITask, '_id'>, Document {}
 export const Task: Model<TaskModel> = mongoose.model<TaskModel>('Task', schema);
