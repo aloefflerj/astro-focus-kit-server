@@ -80,4 +80,44 @@ describe('Tasks functional tests', () => {
       ]);
     });
   });
+
+  describe('When reordering a task on a given day', () => {
+    it('should return all tasks ordered for that day', async () => {
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[0]);
+
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[1]);
+
+      const sameDayNewTask = {
+        order: 2,
+        title: 'read a book',
+        type: 'binary',
+        status: 'todo',
+        urgent: false,
+        important: false,
+        description: null,
+        registerDate: '2022-10-17T03:00:00.000Z',
+        conclusionDate: null,
+      };
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(sameDayNewTask);
+      const { body, status } = await global.testRequest
+        .get('/tasks')
+        .set({ 'x-access-token': token });
+
+      expect(status).toEqual(StatusCodes.OK);
+      expect(body).toEqual([
+        expect.objectContaining({ ...tasksResponseFixtures[0], order: 1 }),
+        expect.objectContaining({ ...sameDayNewTask, order: 2 }),
+        expect.objectContaining({ ...tasksResponseFixtures[1], order: 3 }),
+      ]);
+    });
+  });
 });
