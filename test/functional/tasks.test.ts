@@ -4,6 +4,17 @@ import AuthService from '@src/services/auth';
 import taskResponseFixture from '@test/fixtures/taskResponseFixture.json';
 import tasksResponseFixtures from '@test/fixtures/tasksResponseFixture.json';
 import { StatusCodes } from 'http-status-codes';
+const newTask = {
+  order: 3,
+  title: 'read a book',
+  type: 'binary',
+  status: 'todo',
+  urgent: false,
+  important: false,
+  description: null,
+  registerDate: '2022-10-17T03:00:00.000Z',
+  conclusionDate: null,
+};
 
 describe('Tasks functional tests', () => {
   const defaultUser = {
@@ -93,22 +104,10 @@ describe('Tasks functional tests', () => {
         .set({ 'x-access-token': token })
         .send(tasksResponseFixtures[1]);
 
-      const sameDayNewTask = {
-        order: 3,
-        title: 'read a book',
-        type: 'binary',
-        status: 'todo',
-        urgent: false,
-        important: false,
-        description: null,
-        registerDate: '2022-10-17T03:00:00.000Z',
-        conclusionDate: null,
-      };
-
       const response = await global.testRequest
         .post('/tasks')
         .set({ 'x-access-token': token })
-        .send(sameDayNewTask);
+        .send(newTask);
 
       const { body, status } = await global.testRequest
         .patch(`/tasks/reorder/${response.body.id}`)
@@ -118,8 +117,52 @@ describe('Tasks functional tests', () => {
       expect(status).toEqual(StatusCodes.OK);
       expect(body).toEqual([
         expect.objectContaining({ ...tasksResponseFixtures[0], order: 1 }),
-        expect.objectContaining({ ...sameDayNewTask, order: 2 }),
+        expect.objectContaining({ ...newTask, order: 2 }),
         expect.objectContaining({ ...tasksResponseFixtures[1], order: 3 }),
+      ]);
+    });
+
+    it(`should reorder all tasks from both source and destination 
+        days when reordering is made from one day to another`, async () => {
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[0]);
+
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[1]);
+
+      const firstTaskOnAnotherDay = tasksResponseFixtures[0];
+      firstTaskOnAnotherDay.registerDate = '2022-10-18T03:00:00.000Z';
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(firstTaskOnAnotherDay);
+
+      const secondTaskOnAnotherDay = tasksResponseFixtures[1];
+      secondTaskOnAnotherDay.registerDate = '2022-10-18T03:00:00.000Z';
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(secondTaskOnAnotherDay);
+
+      const response = await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(newTask);
+
+      const { body, status } = await global.testRequest
+        .patch(`/tasks/reorder/${response.body.id}`)
+        .set({ 'x-access-token': token })
+        .send({ order: 1, destinationDate: '2022-10-18T03:00:00.000Z' });
+
+      expect(status).toEqual(StatusCodes.OK);
+      expect(body).toEqual([
+        expect.objectContaining({ ...newTask, order: 1 }),
+        expect.objectContaining({ ...firstTaskOnAnotherDay, order: 2 }),
+        expect.objectContaining({ ...secondTaskOnAnotherDay, order: 3 }),
       ]);
     });
   });
