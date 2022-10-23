@@ -81,8 +81,8 @@ describe('Tasks functional tests', () => {
     });
   });
 
-  describe('When reordering a task on a given day', () => {
-    it('should return all tasks ordered for that day', async () => {
+  describe('When reordering a task', () => {
+    it('should reorder all tasks in a given day when reordering is made on the same day', async () => {
       await global.testRequest
         .post('/tasks')
         .set({ 'x-access-token': token })
@@ -94,7 +94,7 @@ describe('Tasks functional tests', () => {
         .send(tasksResponseFixtures[1]);
 
       const sameDayNewTask = {
-        order: 2,
+        order: 3,
         title: 'read a book',
         type: 'binary',
         status: 'todo',
@@ -104,13 +104,16 @@ describe('Tasks functional tests', () => {
         registerDate: '2022-10-17T03:00:00.000Z',
         conclusionDate: null,
       };
-      await global.testRequest
+
+      const response = await global.testRequest
         .post('/tasks')
         .set({ 'x-access-token': token })
         .send(sameDayNewTask);
+
       const { body, status } = await global.testRequest
-        .get('/tasks')
-        .set({ 'x-access-token': token });
+        .patch(`/tasks/reorder/${response.body.id}`)
+        .set({ 'x-access-token': token })
+        .send({ order: 2, destinationDate: '2022-10-17T03:00:00.000Z' });
 
       expect(status).toEqual(StatusCodes.OK);
       expect(body).toEqual([
