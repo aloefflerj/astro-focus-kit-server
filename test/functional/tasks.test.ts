@@ -32,30 +32,6 @@ describe('Tasks functional tests', () => {
       );
     });
 
-    describe('When fetching tasks from a given user', () => {
-      it('should return user tasks', async () => {
-        await global.testRequest
-          .post('/tasks')
-          .set({ 'x-access-token': token })
-          .send(tasksResponseFixtures[0]);
-
-        await global.testRequest
-          .post('/tasks')
-          .set({ 'x-access-token': token })
-          .send(tasksResponseFixtures[1]);
-
-        const { body, status } = await global.testRequest
-          .get('/tasks')
-          .set({ 'x-access-token': token });
-        expect(status).toEqual(StatusCodes.OK);
-
-        expect(body).toEqual([
-          expect.objectContaining(tasksResponseFixtures[0]),
-          expect.objectContaining(tasksResponseFixtures[1]),
-        ]);
-      });
-    });
-
     it('should return 422 when there is a validation error', async () => {
       const invalidValue = {
         order: 2,
@@ -78,6 +54,30 @@ describe('Tasks functional tests', () => {
         code: StatusCodes.UNPROCESSABLE_ENTITY,
         error: `Task validation failed: urgent: Cast to Boolean failed for value "THIS IS NOT A VALID VALUE" (type string) at path "urgent" because of "CastError"`,
       });
+    });
+  });
+
+  describe('When fetching tasks from a given user', () => {
+    it('should return user tasks', async () => {
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[0]);
+
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[1]);
+
+      const { body, status } = await global.testRequest
+        .get('/tasks')
+        .set({ 'x-access-token': token });
+      expect(status).toEqual(StatusCodes.OK);
+
+      expect(body).toEqual([
+        expect.objectContaining(tasksResponseFixtures[0]),
+        expect.objectContaining(tasksResponseFixtures[1]),
+      ]);
     });
   });
 });
