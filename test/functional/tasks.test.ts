@@ -174,4 +174,19 @@ describe('Tasks functional tests', () => {
       ]);
     });
   });
+
+  describe('When deleting a task', () => {
+    it('should return delete a tasks with success', async () => {
+      const { body } = await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[0]);
+
+      const { status } = await global.testRequest
+        .delete(`/delete/${body.id}`)
+        .set({ 'x-access-token': token });
+
+      expect(status).toBe(StatusCodes.NO_CONTENT);
+    });
+  });
 });
