@@ -27,7 +27,7 @@ export class TasksController extends BaseController {
     res: Response
   ): Promise<void> {
     try {
-      const tasks = await Task.find({ user: req.decoded?.id });
+      const tasks = await Task.find({ user: req.decoded?.id, deleted: false });
       res.status(StatusCodes.OK).send(tasks);
       return;
     } catch (error) {

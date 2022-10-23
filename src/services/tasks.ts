@@ -50,6 +50,7 @@ export default class TasksService {
       user: userId,
       registerDate: triggerTask.registerDate,
       order: { $gte: triggerTask.order },
+      deleted: false,
     }).sort({ order: 'asc' });
 
     const sourceDate = triggerTask.registerDate;
@@ -66,6 +67,7 @@ export default class TasksService {
     return await Task.find({
       registerDate: sourceDate,
       user: userId,
+      deleted: false,
     }).sort({ order: 'asc' });
   }
 
@@ -82,6 +84,7 @@ export default class TasksService {
       user: userId,
       registerDate: destinationDate,
       order: { $gte: newOrder },
+      deleted: false,
     }).sort({ order: 'asc' });
 
     triggerTask.order = newOrder;
@@ -97,6 +100,7 @@ export default class TasksService {
     return await Task.find({
       registerDate: destinationDate,
       user: userId,
+      deleted: false,
     }).sort({ order: 'asc' });
   }
 }
