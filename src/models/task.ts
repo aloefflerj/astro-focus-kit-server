@@ -11,6 +11,7 @@ export interface ITask {
   description?: string;
   registerDate: string;
   conclusionDate?: string;
+  deleted: boolean;
 }
 
 const schema = new mongoose.Schema(
@@ -24,6 +25,7 @@ const schema = new mongoose.Schema(
     description: { type: String, required: false },
     registerDate: { type: Date, required: true },
     conclusionDate: { type: Date, required: false },
+    deleted: { type: Boolean, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {

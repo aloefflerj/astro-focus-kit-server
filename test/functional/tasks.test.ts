@@ -14,6 +14,7 @@ const newTask = {
   description: null,
   registerDate: '2022-10-17T03:00:00.000Z',
   conclusionDate: null,
+  deleted: false,
 };
 
 describe('Tasks functional tests', () => {
@@ -54,6 +55,7 @@ describe('Tasks functional tests', () => {
         description: null,
         registerDate: '2022-10-17T03:00:00.000Z',
         conclusionDate: null,
+        deleted: false,
       };
 
       const response = await global.testRequest
