@@ -190,5 +190,18 @@ describe('Tasks functional tests', () => {
 
       expect(response.status).toBe(StatusCodes.NO_CONTENT);
     });
+
+    it('should return 404 when a task is not found', async () => {
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[0]);
+
+      const response = await global.testRequest
+        .delete('/tasks/6352117a4d6dbb3e56c39e40') //not valid
+        .set({ 'x-access-token': token });
+
+      expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    });
   });
 });
