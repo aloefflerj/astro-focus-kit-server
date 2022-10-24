@@ -6,6 +6,8 @@ import { TasksController } from './controllers/tasks';
 import cors from 'cors';
 import * as database from '@src/database';
 import { UsersController } from './controllers/users';
+import * as moment from 'moment';
+import 'moment/locale/pt-br';
 
 export class SetupServer extends Server {
   constructor(private port = 3000 || process.env.port) {
@@ -13,6 +15,7 @@ export class SetupServer extends Server {
   }
 
   public async init(): Promise<void> {
+    this.setupLocale();
     this.setupExpress();
     this.setupControllers();
     await this.databaseSetup();
@@ -31,6 +34,10 @@ export class SetupServer extends Server {
     const tasksController = new TasksController();
     const usersController = new UsersController();
     this.addControllers([tasksController, usersController]);
+  }
+
+  private setupLocale(): void {
+    moment.locale('pt-br');
   }
 
   private async databaseSetup(): Promise<void> {
