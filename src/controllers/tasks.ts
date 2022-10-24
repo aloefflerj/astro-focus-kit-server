@@ -88,12 +88,16 @@ export class TasksController extends BaseController {
       if (error instanceof mongoose.Error.ValidationError) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
           code: StatusCodes.INTERNAL_SERVER_ERROR,
-          error: 'Internal Server Error',
+          error: error.message,
         });
         return;
       }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: (error as Error).message,
+      });
+      return;
     }
-    this.internalServerError(res);
   }
 
   @Patch('reorder/:id')
