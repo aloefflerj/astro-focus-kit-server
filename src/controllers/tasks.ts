@@ -1,6 +1,7 @@
 import {
   ClassMiddleware,
   Controller,
+  Delete,
   Get,
   Patch,
   Post,
@@ -52,6 +53,43 @@ export class TasksController extends BaseController {
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
         this.sendCreateUpdateErrorResponse(res, error);
+        return;
+      }
+    }
+    this.internalServerError(res);
+  }
+
+  @Delete(':id')
+  public async delete(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = <{ id: string }>req.params;
+      //TODO: adds code 410 GONE if it has already been deleted
+      const response = await Task.findByIdAndUpdate(
+        id,
+        { deleted: true },
+        { new: true }
+      );
+      if (!response) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .send({ code: StatusCodes.NOT_FOUND, error: 'Task not found' });
+        return;
+      }
+      if (response.deleted !== true) {
+        res.status(StatusCodes.BAD_REQUEST).send({
+          code: StatusCodes.BAD_REQUEST,
+          error: 'Task could not be deleted',
+        });
+        return;
+      }
+      res.status(StatusCodes.NO_CONTENT).send();
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          error: 'Internal Server Error',
+        });
         return;
       }
     }
