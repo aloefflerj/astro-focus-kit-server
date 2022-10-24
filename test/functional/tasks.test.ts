@@ -184,11 +184,11 @@ describe('Tasks functional tests', () => {
         .set({ 'x-access-token': token })
         .send(tasksResponseFixtures[0]);
 
-      const { status } = await global.testRequest
-        .delete(`/delete/${body.id}`)
+      const response = await global.testRequest
+        .delete(`/tasks/${body.id}`)
         .set({ 'x-access-token': token });
 
-      expect(status).toBe(StatusCodes.NO_CONTENT);
+      expect(response.status).toBe(StatusCodes.NO_CONTENT);
     });
   });
 });
