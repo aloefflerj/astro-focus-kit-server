@@ -204,4 +204,21 @@ describe('Tasks functional tests', () => {
       expect(response.status).toBe(StatusCodes.NOT_FOUND);
     });
   });
+
+  describe('When updating a taks', () => {
+    it('should return updated task with success', async () => {
+      const { body: createdTaskBody } = await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(tasksResponseFixtures[0]);
+
+      const { status } = await global.testRequest
+        .put(`tasks/${createdTaskBody.id}`)
+        .set({ 'x-access-token': token })
+        .send({ title: 'New Title' });
+
+      expect(status).toBe(StatusCodes.NO_CONTENT);
+      expect.objectContaining({ ...createdTaskBody, title: 'New Title' });
+    });
+  });
 });
