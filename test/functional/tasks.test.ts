@@ -213,7 +213,7 @@ describe('Tasks functional tests', () => {
         .send(tasksResponseFixtures[0]);
 
       const { status } = await global.testRequest
-        .put(`tasks/${createdTaskBody.id}`)
+        .put(`/tasks/${createdTaskBody.id}`)
         .set({ 'x-access-token': token })
         .send({ title: 'New Title' });
 
