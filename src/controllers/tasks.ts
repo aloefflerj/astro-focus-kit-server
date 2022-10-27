@@ -136,7 +136,7 @@ export class TasksController extends BaseController {
   public async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = <{ id: string }>req.params;
-      const response = Task.findByIdAndUpdate(id, req.body);
+      const response = await Task.findByIdAndUpdate(id, req.body);
 
       if (!response) {
         res
