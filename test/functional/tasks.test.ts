@@ -221,4 +221,18 @@ describe('Tasks functional tests', () => {
       expect.objectContaining({ ...createdTaskBody, title: 'New Title' });
     });
   });
+
+  it('should return 404 not found error on task not found', async () => {
+    await global.testRequest
+      .post('/tasks')
+      .set({ 'x-access-token': token })
+      .send(tasksResponseFixtures[0]);
+
+    const response = await global.testRequest
+      .put('/tasks/6352117a4d6dbb3e56c39e40') //not valid
+      .set({ 'x-access-token': token })
+      .send({ title: 'New Title' });
+
+    expect(response.status).toBe(StatusCodes.NOT_FOUND);
+  });
 });
