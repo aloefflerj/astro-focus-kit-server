@@ -5,6 +5,7 @@ import {
   Get,
   Patch,
   Post,
+  Put,
 } from '@overnightjs/core';
 import { authMiddleware } from '@src/middlewares/auth';
 import { Task } from '@src/models/task';
@@ -22,6 +23,13 @@ interface ReorderRequestBody {
 @Controller('tasks')
 @ClassMiddleware(authMiddleware)
 export class TasksController extends BaseController {
+  service: TasksService;
+
+  constructor() {
+    super();
+    this.service = new TasksService();
+  }
+
   @Get('')
   public async getTasksForLoggedUser(
     req: Request,
@@ -106,8 +114,7 @@ export class TasksController extends BaseController {
       const { id } = <{ id: string }>req.params;
       const { order, destinationDate } = <ReorderRequestBody>req.body;
 
-      const tasksService = new TasksService();
-      const reorderedTasks = await tasksService.reorderTasks(
+      const reorderedTasks = await this.service.reorderTasks(
         id,
         order,
         destinationDate,
@@ -115,6 +122,32 @@ export class TasksController extends BaseController {
       );
 
       res.status(StatusCodes.OK).send(reorderedTasks);
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        this.sendCreateUpdateErrorResponse(res, error);
+        return;
+      }
+    }
+    this.internalServerError(res);
+  }
+
+  @Put(':id')
+  public async update(req: Request, res: Response): Promise<void> {
+    console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOK');
+    try {
+      const { id } = <{ id: string }>req.params;
+      const response = Task.findByIdAndUpdate(id, req.body);
+
+      if (!response) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .send({ code: StatusCodes.NOT_FOUND, error: 'Task not found' });
+
+        return;
+      }
+
+      res.status(StatusCodes.NO_CONTENT).send();
       return;
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
