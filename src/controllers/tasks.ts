@@ -134,7 +134,6 @@ export class TasksController extends BaseController {
 
   @Put(':id')
   public async update(req: Request, res: Response): Promise<void> {
-    console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOK');
     try {
       const { id } = <{ id: string }>req.params;
       const response = Task.findByIdAndUpdate(id, req.body);
