@@ -10,7 +10,7 @@ import * as moment from 'moment';
 import 'moment/locale/pt-br';
 
 export class SetupServer extends Server {
-  constructor(private port = 3000 || process.env.port) {
+  constructor(private port = 8614 || process.env.port) {
     super();
   }
 

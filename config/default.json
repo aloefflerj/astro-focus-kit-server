@@ -12,6 +12,6 @@
       "db": "astrofocuskit",
       "authSource": "admin"
     },
-    "port": 3000
+    "port": 8614
   }
 }
