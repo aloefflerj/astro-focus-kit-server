@@ -1,4 +1,4 @@
-import { AxiosStatic } from 'axios';
+import quotes from './quotes.json';
 
 export interface ZenQuotesQuoteResponse {
   q: string;
@@ -12,26 +12,25 @@ export interface ZenQuotesQuote {
 }
 
 export class ZenQuotes {
-  constructor(protected request: AxiosStatic) {}
+  public async fetchRandomQuote(): Promise<ZenQuotesQuote> {
+    const randomQuote = this.getRandomFromJson(quotes);
 
-  public async fetchRandomQuote(): Promise<ZenQuotesQuote[]> {
-    const response = await this.request.get<ZenQuotesQuoteResponse[]>(
-      'https://zenquotes.io/api/random'
-    );
-
-    return this.normalizeResponse(response.data);
+    return this.normalizeResponse(randomQuote);
   }
 
-  private normalizeResponse(
-    response: ZenQuotesQuoteResponse[]
-  ): ZenQuotesQuote[] {
-    return response.filter(this.isValidQuote.bind(this)).map((quote) => ({
-      quote: quote.q,
-      author: quote.a,
-    }));
+  private normalizeResponse(response: ZenQuotesQuoteResponse): ZenQuotesQuote {
+    return {
+      quote: response.q,
+      author: response.a,
+    };
   }
 
-  private isValidQuote(quote: Partial<ZenQuotesQuoteResponse>): boolean {
-    return !!(quote.q && quote.a);
+  private getRandomFromJson(quotes: ZenQuotesQuoteResponse[]) {
+    const randomNumber = this.randomIntFromInterval(0, 49);
+    return quotes[randomNumber];
+  }
+
+  private randomIntFromInterval(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }

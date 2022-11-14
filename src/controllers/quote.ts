@@ -1,6 +1,5 @@
 import { Controller, Get } from '@overnightjs/core';
-import { ZenQuotes, ZenQuotesQuote } from '@src/clients/ZenQuotes';
-import axios from 'axios';
+import { ZenQuotes } from '@src/clients/ZenQuotes';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
@@ -11,12 +10,12 @@ export class QuotesController extends BaseController {
 
   constructor() {
     super();
-    this.client = new ZenQuotes(axios);
+    this.client = new ZenQuotes();
   }
 
   @Get('')
   public async getQuote(req: Request, res: Response): Promise<void> {
     const quote = await this.client.fetchRandomQuote();
-    res.status(StatusCodes.OK).send(quote[0]);
+    res.status(StatusCodes.OK).send(quote);
   }
 }
