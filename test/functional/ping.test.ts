@@ -7,4 +7,11 @@ describe('Ping functional tests', () => {
       expect(status).toBe(StatusCodes.OK);
     });
   });
+
+  describe('When ping to required auth server without beeing logged in', () => {
+    it('should return 401 status', async () => {
+      const { status } = await global.testRequest.get('/ping/auth');
+      expect(status).toBe(StatusCodes.UNAUTHORIZED);
+    });
+  });
 });
