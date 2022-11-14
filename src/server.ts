@@ -9,6 +9,7 @@ import { UsersController } from './controllers/users';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
 import { QuotesController } from './controllers/quote';
+import { PingController } from './controllers/ping';
 
 export class SetupServer extends Server {
   constructor(private port = 8614 || process.env.port) {
@@ -35,7 +36,13 @@ export class SetupServer extends Server {
     const tasksController = new TasksController();
     const usersController = new UsersController();
     const quotesController = new QuotesController();
-    this.addControllers([tasksController, usersController, quotesController]);
+    const pingController = new PingController();
+    this.addControllers([
+      tasksController,
+      usersController,
+      quotesController,
+      pingController,
+    ]);
   }
 
   private setupLocale(): void {
