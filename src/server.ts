@@ -8,6 +8,7 @@ import * as database from '@src/database';
 import { UsersController } from './controllers/users';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
+import { QuotesController } from './controllers/quote';
 
 export class SetupServer extends Server {
   constructor(private port = 8614 || process.env.port) {
@@ -33,7 +34,8 @@ export class SetupServer extends Server {
   private setupControllers(): void {
     const tasksController = new TasksController();
     const usersController = new UsersController();
-    this.addControllers([tasksController, usersController]);
+    const quotesController = new QuotesController();
+    this.addControllers([tasksController, usersController, quotesController]);
   }
 
   private setupLocale(): void {
