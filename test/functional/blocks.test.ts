@@ -1,4 +1,5 @@
 import { defaultBlockedWebsites } from '@src/clients/defaultValues/defaultBlockedWebsites';
+import { Block } from '@src/models/block';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { StatusCodes } from 'http-status-codes';
