@@ -31,7 +31,7 @@ export class TasksController extends BaseController {
   }
 
   @Get('')
-  public async getTasksForLoggedUser(
+  public async getTasksFromLoggedUser(
     req: Request,
     res: Response
   ): Promise<void> {
