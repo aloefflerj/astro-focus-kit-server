@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import 'moment/locale/pt-br';
 import { QuotesController } from './controllers/quote';
 import { PingController } from './controllers/ping';
+import { BlocksController } from './controllers/blocks';
 
 export class SetupServer extends Server {
   constructor(private port = 8614 || process.env.port) {
@@ -37,11 +38,14 @@ export class SetupServer extends Server {
     const usersController = new UsersController();
     const quotesController = new QuotesController();
     const pingController = new PingController();
+    const blocksController = new BlocksController();
+
     this.addControllers([
       tasksController,
       usersController,
       quotesController,
       pingController,
+      blocksController,
     ]);
   }
 
