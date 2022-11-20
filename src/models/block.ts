@@ -2,12 +2,12 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface IBlock {
   _id?: string;
-  url: boolean;
+  url: string;
 }
 
 const schema = new mongoose.Schema(
   {
-    order: { type: String, required: true },
+    url: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {

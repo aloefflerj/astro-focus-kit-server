@@ -15,7 +15,7 @@ export class BlocksController extends BaseController {
   }
 
   @Get('')
-  public async getBlockFromLoggedUser(
+  public async getBlocksFromLoggedUser(
     req: Request,
     res: Response
   ): Promise<void> {
