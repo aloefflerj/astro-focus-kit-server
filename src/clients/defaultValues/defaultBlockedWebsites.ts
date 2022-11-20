@@ -1,7 +1,7 @@
 export const defaultBlockedWebsites = [
   {
     id: '&8CcqqU2c5Gnhg',
-    url: 'yotube.com',
+    url: 'youtube.com',
   },
   {
     id: 'Yd28ENg&!X!Aiz',
