@@ -2,6 +2,7 @@ import config, { IConfig } from 'config';
 import { connect as mongooseConnect, connection } from 'mongoose';
 
 const dbConfig: IConfig = config.get('App.database');
+const prefix = dbConfig.get('prefix');
 const user = dbConfig.get('user');
 const pass = dbConfig.get('pass');
 const host = dbConfig.get('host');

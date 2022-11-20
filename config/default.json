@@ -8,12 +8,7 @@
       "webclient": "http://localhost:5173"
     },
     "database": {
-      "user": "root",
-      "pass": "root",
-      "host": "db-astro",
-      "port": "27017",
-      "db": "astrofocuskit",
-      "authSource": "admin"
+      "connection": "mongodb://root:root@db-astro:27017/astrofocuskit?authSource=admin"
     },
     "port": 8614
   }

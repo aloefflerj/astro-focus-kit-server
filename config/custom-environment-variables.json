@@ -1,0 +1,15 @@
+{
+  "App": {
+    "auth": {
+      "key": "JWT_KEY",
+      "tokenExpiresIn": "200000000"
+    },
+    "domains": {
+      "webclient": "BASE_CLIENT_URL"
+    },
+    "database": {
+      "connection": "MONGO_CONNECTION"
+    },
+    "port": "PORT"
+  }
+}
