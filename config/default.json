@@ -4,6 +4,9 @@
       "key": "some-key",
       "tokenExpiresIn": "20000000"
     },
+    "domains": {
+      "webclient": "http://localhost:5173"
+    },
     "database": {
       "user": "root",
       "pass": "root",

@@ -2,12 +2,14 @@ import './util/module-alias';
 import { Server } from '@overnightjs/core';
 import bodyParser from 'body-parser';
 import { Application } from 'express';
-import { TasksController } from './controllers/tasks';
 import cors from 'cors';
 import * as database from '@src/database';
-import { UsersController } from './controllers/users';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
+import config, { IConfig } from 'config';
+
+import { TasksController } from './controllers/tasks';
+import { UsersController } from './controllers/users';
 import { QuotesController } from './controllers/quote';
 import { PingController } from './controllers/ping';
 import { BlocksController } from './controllers/blocks';
@@ -26,9 +28,13 @@ export class SetupServer extends Server {
 
   private setupExpress(): void {
     this.app.use(bodyParser.json());
+
+    const domains: IConfig = config.get('App.domains');
+    const webclient = domains.get<string>('webclient');
+
     this.app.use(
       cors({
-        origin: '*',
+        origin: webclient,
       })
     );
   }
