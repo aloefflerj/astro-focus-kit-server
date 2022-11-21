@@ -1,8 +1,10 @@
 import { defaultBlockedWebsites } from '@src/clients/defaultValues/defaultBlockedWebsites';
 import { Block } from '@src/models/block';
+import { Task } from '@src/models/task';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { StatusCodes } from 'http-status-codes';
+import moment from 'moment-timezone';
 
 describe('Blocks functional tests', () => {
   const defaultUser = {
@@ -15,6 +17,7 @@ describe('Blocks functional tests', () => {
 
   beforeEach(async () => {
     await Block.deleteMany({});
+    await Task.deleteMany({});
     await User.deleteMany({});
     const user = await new User(defaultUser).save();
     token = AuthService.generateToken(user.toJSON());
@@ -24,6 +27,46 @@ describe('Blocks functional tests', () => {
     it('should return default blocks if the user has no config', async () => {
       const { status, body } = await global.testRequest
         .get('/blocks/config')
+        .set({ 'x-access-token': token });
+
+      expect(status).toEqual(StatusCodes.OK);
+
+      expect(body).toEqual(defaultBlockedWebsites);
+    });
+  });
+
+  describe('When fetching blocks from a given user with tasks setted', () => {
+    it('should return empty if the user has no task registered today', async () => {
+      const { status, body } = await global.testRequest
+        .get('/blocks')
+        .set({ 'x-access-token': token });
+
+      expect(status).toEqual(StatusCodes.OK);
+
+      expect(body).toEqual([]);
+    });
+
+    it('should return blocked sites if the user has a task registered today', async () => {
+      const newTask = {
+        order: 1,
+        title: 'read a book',
+        type: 'binary',
+        status: 'todo',
+        urgent: false,
+        important: false,
+        description: null,
+        registerDate: moment(),
+        conclusionDate: null,
+        deleted: false,
+      };
+
+      await global.testRequest
+        .post('/tasks')
+        .set({ 'x-access-token': token })
+        .send(newTask);
+
+      const { status, body } = await global.testRequest
+        .get('/blocks')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
