@@ -74,4 +74,27 @@ describe('Blocks functional tests', () => {
       expect(body).toEqual(defaultBlockedWebsites);
     });
   });
+  describe('When creating blocks config for a given user', () => {
+    it('should create website blocks config successfuly', async () => {
+      const newSites = [
+        {
+          url: 'youtube.com',
+        },
+        {
+          url: 'facebook.com',
+        },
+        {
+          url: 'itch.io',
+        },
+      ];
+
+      const { status, body } = await global.testRequest
+        .post('/blocks/config')
+        .set({ 'x-access-token': token })
+        .send(newSites);
+
+      expect(status).toBe(StatusCodes.CREATED);
+      expect(body).toEqual(expect.objectContaining(newSites));
+    });
+  });
 });
