@@ -23,7 +23,7 @@ describe('Blocks functional tests', () => {
   describe('When fetching blocks from a given user', () => {
     it('should return default blocks if the user has no config', async () => {
       const { status, body } = await global.testRequest
-        .get('/blocks')
+        .get('/blocks/config')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
