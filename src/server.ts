@@ -6,7 +6,6 @@ import cors from 'cors';
 import * as database from '@src/database';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
-import config, { IConfig } from 'config';
 
 import { TasksController } from './controllers/tasks';
 import { UsersController } from './controllers/users';
@@ -29,12 +28,9 @@ export class SetupServer extends Server {
   private setupExpress(): void {
     this.app.use(bodyParser.json());
 
-    const domains: IConfig = config.get('App.domains');
-    const webclient = domains.get<string>('webclient');
-
     this.app.use(
       cors({
-        origin: webclient,
+        origin: '*',
       })
     );
   }
