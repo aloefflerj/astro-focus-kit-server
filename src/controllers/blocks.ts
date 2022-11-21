@@ -6,7 +6,9 @@ import {
 } from '@overnightjs/core';
 import { defaultBlockedWebsites } from '@src/clients/defaultValues/defaultBlockedWebsites';
 import { authMiddleware } from '@src/middlewares/auth';
+import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
 import { unrestrictedOrigin } from '@src/middlewares/unrestrictedOrigin';
+import { Block } from '@src/models/block';
 import BlockService from '@src/services/block';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -18,6 +20,33 @@ import { BaseController } from '.';
 export class BlocksController extends BaseController {
   constructor() {
     super();
+  }
+
+  @Get('config')
+  @Middleware(restrictedOrigin)
+  public async getBlocksConfigFromLoggedUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const blocks = await Block.find({ user: req.decoded?.id });
+
+      if (blocks.length === 0) {
+        res.status(StatusCodes.OK).send(defaultBlockedWebsites);
+        return;
+      }
+
+      res.status(StatusCodes.OK).send(blocks);
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send({ code: StatusCodes.BAD_REQUEST, error: error.message });
+        return;
+      }
+    }
+    this.internalServerError(res);
   }
 
   @Get('')
