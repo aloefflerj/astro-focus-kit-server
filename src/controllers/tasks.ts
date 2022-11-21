@@ -8,7 +8,7 @@ import {
   Put,
 } from '@overnightjs/core';
 import { authMiddleware } from '@src/middlewares/auth';
-import { origin } from '@src/middlewares/origin';
+import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
 import { Task } from '@src/models/task';
 import TasksService from '@src/services/tasks';
 import { Request, Response } from 'express';
@@ -23,7 +23,7 @@ interface ReorderRequestBody {
 
 @Controller('tasks')
 @ClassMiddleware(authMiddleware)
-@ClassMiddleware(origin)
+@ClassMiddleware(restrictedOrigin)
 export class TasksController extends BaseController {
   service: TasksService;
 

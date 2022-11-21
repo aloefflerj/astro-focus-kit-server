@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-export function blockedSitesOrigin(
+export function unrestrictedOrigin(
   req: Partial<Request>,
   res: Partial<Response>,
   next: NextFunction

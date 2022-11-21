@@ -1,12 +1,12 @@
 import { ClassMiddleware, Controller, Get } from '@overnightjs/core';
 import { ZenQuotes } from '@src/clients/ZenQuotes';
-import { origin } from '@src/middlewares/origin';
+import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
 @Controller('quotes')
-@ClassMiddleware(origin)
+@ClassMiddleware(restrictedOrigin)
 export class QuotesController extends BaseController {
   client: ZenQuotes;
 

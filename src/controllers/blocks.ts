@@ -6,7 +6,7 @@ import {
 } from '@overnightjs/core';
 import { defaultBlockedWebsites } from '@src/clients/defaultValues/defaultBlockedWebsites';
 import { authMiddleware } from '@src/middlewares/auth';
-import { blockedSitesOrigin } from '@src/middlewares/blockedSitesOrigin';
+import { unrestrictedOrigin } from '@src/middlewares/unrestrictedOrigin';
 import BlockService from '@src/services/block';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -21,7 +21,7 @@ export class BlocksController extends BaseController {
   }
 
   @Get('')
-  @Middleware(blockedSitesOrigin)
+  @Middleware(unrestrictedOrigin)
   public async getBlocksFromLoggedUser(
     req: Request,
     res: Response

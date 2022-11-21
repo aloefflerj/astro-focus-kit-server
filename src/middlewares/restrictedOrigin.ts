@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import config, { IConfig } from 'config';
 
-export function origin(
+export function restrictedOrigin(
   req: Partial<Request>,
   res: Partial<Response>,
   next: NextFunction
