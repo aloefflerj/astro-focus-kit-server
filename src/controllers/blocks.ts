@@ -7,7 +7,7 @@ import {
 import { defaultBlockedWebsites } from '@src/clients/defaultValues/defaultBlockedWebsites';
 import { authMiddleware } from '@src/middlewares/auth';
 import { blockedSitesOrigin } from '@src/middlewares/blockedSitesOrigin';
-import { Block } from '@src/models/block';
+import BlockService from '@src/services/block';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
@@ -27,10 +27,20 @@ export class BlocksController extends BaseController {
     res: Response
   ): Promise<void> {
     try {
-      const blocks = await Block.find({
-        user: req.decoded?.id,
-        deleted: false,
-      });
+      const blockService = new BlockService();
+      const userId = req.decoded?.id;
+
+      if (!userId) {
+        this.internalServerError(res);
+        return;
+      }
+
+      if (!(await blockService.hasAnyTaskForTheDay(userId))) {
+        res.status(StatusCodes.OK).send([]);
+        return;
+      }
+
+      const blocks = await blockService.getBlocksFromLoggedUser(userId);
 
       if (blocks.length === 0) {
         res.status(StatusCodes.OK).send(defaultBlockedWebsites);

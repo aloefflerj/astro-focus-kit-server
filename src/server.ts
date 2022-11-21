@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { Application } from 'express';
 import cors from 'cors';
 import * as database from '@src/database';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import 'moment/locale/pt-br';
 
 import { TasksController } from './controllers/tasks';
@@ -52,7 +52,7 @@ export class SetupServer extends Server {
   }
 
   private setupLocale(): void {
-    moment.locale('pt-br');
+    moment.tz.setDefault('America/Sao_Paulo');
   }
 
   private async databaseSetup(): Promise<void> {
