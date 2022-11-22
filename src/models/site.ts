@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
-export interface IBlock {
+export interface ISite {
   _id?: string;
   url: string;
 }
@@ -21,8 +21,5 @@ const schema = new mongoose.Schema(
   }
 );
 
-export interface BlockModel extends Omit<IBlock, '_id'>, Document {}
-export const Block: Model<BlockModel> = mongoose.model<BlockModel>(
-  'Block',
-  schema
-);
+export interface SiteModel extends Omit<ISite, '_id'>, Document {}
+export const Site: Model<SiteModel> = mongoose.model<SiteModel>('Site', schema);

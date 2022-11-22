@@ -1,12 +1,12 @@
-import { defaultBlockedWebsites } from '@src/clients/defaultValues/defaultBlockedWebsites';
-import { Block } from '@src/models/block';
+import { defaultWebsitesToBlock } from '@src/clients/defaultValues/defaultWebsitesToBlock';
+import { Site } from '@src/models/site';
 import { Task } from '@src/models/task';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { StatusCodes } from 'http-status-codes';
 import moment from 'moment-timezone';
 
-describe('Blocks functional tests', () => {
+describe('Sites functional tests', () => {
   const defaultUser = {
     name: 'dovahkiin',
     email: 'dovahkiin@skyrim.com',
@@ -16,15 +16,15 @@ describe('Blocks functional tests', () => {
   let token: string;
 
   beforeEach(async () => {
-    await Block.deleteMany({});
+    await Site.deleteMany({});
     await Task.deleteMany({});
     await User.deleteMany({});
     const user = await new User(defaultUser).save();
     token = AuthService.generateToken(user.toJSON());
   });
 
-  describe('When creating blocks config for a given user', () => {
-    it('should create website blocks config successfuly', async () => {
+  describe('When creating sites config for a given user', () => {
+    it('should create website sites config successfuly', async () => {
       const newSites = [
         {
           url: 'youtube.com',
@@ -38,7 +38,7 @@ describe('Blocks functional tests', () => {
       ];
 
       const { status, body } = await global.testRequest
-        .post('/blocks/config')
+        .post('/sites/config')
         .set({ 'x-access-token': token })
         .send(newSites);
 
@@ -51,18 +51,18 @@ describe('Blocks functional tests', () => {
     });
   });
 
-  describe('When fetching blocks from a given user', () => {
-    it('should return default blocks if the user has no config', async () => {
+  describe('When fetching sites from a given user', () => {
+    it('should return default sites if the user has no config', async () => {
       const { status, body } = await global.testRequest
-        .get('/blocks/config')
+        .get('/sites/config')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
 
-      expect(body).toEqual(defaultBlockedWebsites);
+      expect(body).toEqual(defaultWebsitesToBlock);
     });
 
-    it('should return custom blocks if the user has websites config', async () => {
+    it('should return custom sites if the user has websites config', async () => {
       const newSites = [
         {
           url: 'youtube.com',
@@ -76,12 +76,12 @@ describe('Blocks functional tests', () => {
       ];
 
       await global.testRequest
-        .post('/blocks/config')
+        .post('/sites/config')
         .set({ 'x-access-token': token })
         .send(newSites);
 
       const { status, body } = await global.testRequest
-        .get('/blocks/config')
+        .get('/sites/config')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
@@ -94,10 +94,10 @@ describe('Blocks functional tests', () => {
     });
   });
 
-  describe('When fetching blocks from a given user with tasks setted', () => {
+  describe('When fetching sites from a given user with tasks setted', () => {
     it('should return empty if the user has no task registered today', async () => {
       const { status, body } = await global.testRequest
-        .get('/blocks')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
@@ -125,12 +125,12 @@ describe('Blocks functional tests', () => {
         .send(newTask);
 
       const { status, body } = await global.testRequest
-        .get('/blocks')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
 
-      expect(body).toEqual(defaultBlockedWebsites);
+      expect(body).toEqual(defaultWebsitesToBlock);
     });
   });
 });

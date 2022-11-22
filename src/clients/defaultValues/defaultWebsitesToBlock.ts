@@ -1,4 +1,4 @@
-export const defaultBlockedWebsites = [
+export const defaultWebsitesToBlock = [
   {
     id: '&8CcqqU2c5Gnhg',
     url: 'youtube.com',

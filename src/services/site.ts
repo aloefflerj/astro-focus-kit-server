@@ -1,24 +1,24 @@
-import { Block, BlockModel, IBlock } from '@src/models/block';
+import { Site, SiteModel, ISite } from '@src/models/site';
 import { Task } from '@src/models/task';
 import moment from 'moment-timezone';
 
-export default class BlockService {
-  public async createsNewBlockConfigForLoggedUser(
-    blocks: IBlock[],
+export default class SiteService {
+  public async createsNewSiteConfigForLoggedUser(
+    sites: ISite[],
     userId: string | undefined
-  ): Promise<BlockModel[]> {
+  ): Promise<SiteModel[]> {
     if (userId === undefined) return [];
 
-    const formattedBlocks = blocks.map(({ url }) => {
+    const formattedSites = sites.map(({ url }) => {
       return { url, user: userId };
     });
 
-    const insertedBlocks = await Block.insertMany(formattedBlocks);
-    return insertedBlocks;
+    const insertedSites = await Site.insertMany(formattedSites);
+    return insertedSites;
   }
 
-  public async getBlocksFromLoggedUser(userId: string): Promise<BlockModel[]> {
-    return await Block.find({
+  public async getSitesFromLoggedUser(userId: string): Promise<SiteModel[]> {
+    return await Site.find({
       user: userId,
     });
   }
