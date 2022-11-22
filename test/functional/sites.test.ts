@@ -175,7 +175,7 @@ describe('Sites functional tests', () => {
         .set({ 'x-access-token': token });
 
       const response = await global.testRequest
-        .delete(`/sites/config/${body.id}`)
+        .delete(`/sites/config/${body[0].id}`)
         .set({ 'x-access-token': token });
 
       expect(response.status).toBe(StatusCodes.NO_CONTENT);

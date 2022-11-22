@@ -82,13 +82,16 @@ export class SitesController extends BaseController {
     const { id } = <{ id: string }>req.params;
 
     try {
-      const response = Site.findByIdAndDelete(id);
+      const response = await Site.findById(id);
       if (!response) {
         res
           .status(StatusCodes.NOT_FOUND)
           .send({ code: StatusCodes.NOT_FOUND, error: 'Site not found' });
         return;
       }
+
+      await Site.findByIdAndDelete(id);
+
       res.status(StatusCodes.NO_CONTENT).send();
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
