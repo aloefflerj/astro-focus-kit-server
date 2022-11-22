@@ -1,6 +1,7 @@
 import {
   ClassMiddleware,
   Controller,
+  Delete,
   Get,
   Middleware,
   Post,
@@ -70,6 +71,39 @@ export class SitesController extends BaseController {
       }
     }
     this.internalServerError(res);
+  }
+
+  @Delete('config/:id')
+  @Middleware(unrestrictedOrigin)
+  public async deleteSitesConfigFromLoggedUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    const { id } = <{ id: string }>req.params;
+
+    try {
+      const response = Site.findByIdAndDelete(id);
+      if (!response) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .send({ code: StatusCodes.NOT_FOUND, error: 'Site not found' });
+        return;
+      }
+      res.status(StatusCodes.NO_CONTENT).send();
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          error: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: (error as Error).message,
+      });
+      return;
+    }
   }
 
   @Get('')
