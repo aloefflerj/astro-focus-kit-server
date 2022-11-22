@@ -109,6 +109,32 @@ describe('Sites functional tests', () => {
         expect.objectContaining(newSites[2]),
       ]);
     });
+
+    it('should return a single site config reference if searched by id', async () => {
+      const newSites = [
+        {
+          url: 'youtube.com',
+        },
+        {
+          url: 'facebook.com',
+        },
+        {
+          url: 'itch.io',
+        },
+      ];
+
+      const { body: sitesBody } = await global.testRequest
+        .post('/sites/config')
+        .set({ 'x-access-token': token })
+        .send(newSites);
+
+      const { status, body } = await global.testRequest
+        .get(`/sites/config/${sitesBody[0].id}`)
+        .set({ 'x-access-token': token });
+
+      expect(status).toBe(StatusCodes.OK);
+      expect(body).toEqual(expect.objectContaining(newSites[0]));
+    });
   });
 
   describe('When fetching sites from a given user with tasks setted', () => {
