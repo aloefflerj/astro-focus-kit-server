@@ -23,6 +23,34 @@ describe('Blocks functional tests', () => {
     token = AuthService.generateToken(user.toJSON());
   });
 
+  describe('When creating blocks config for a given user', () => {
+    it('should create website blocks config successfuly', async () => {
+      const newSites = [
+        {
+          url: 'youtube.com',
+        },
+        {
+          url: 'facebook.com',
+        },
+        {
+          url: 'itch.io',
+        },
+      ];
+
+      const { status, body } = await global.testRequest
+        .post('/blocks/config')
+        .set({ 'x-access-token': token })
+        .send(newSites);
+
+      expect(status).toBe(StatusCodes.CREATED);
+      expect(body).toEqual([
+        expect.objectContaining(newSites[0]),
+        expect.objectContaining(newSites[1]),
+        expect.objectContaining(newSites[2]),
+      ]);
+    });
+  });
+
   describe('When fetching blocks from a given user', () => {
     it('should return default blocks if the user has no config', async () => {
       const { status, body } = await global.testRequest
@@ -32,6 +60,37 @@ describe('Blocks functional tests', () => {
       expect(status).toEqual(StatusCodes.OK);
 
       expect(body).toEqual(defaultBlockedWebsites);
+    });
+
+    it('should return custom blocks if the user has websites config', async () => {
+      const newSites = [
+        {
+          url: 'youtube.com',
+        },
+        {
+          url: 'facebook.com',
+        },
+        {
+          url: 'itch.io',
+        },
+      ];
+
+      await global.testRequest
+        .post('/blocks/config')
+        .set({ 'x-access-token': token })
+        .send(newSites);
+
+      const { status, body } = await global.testRequest
+        .get('/blocks/config')
+        .set({ 'x-access-token': token });
+
+      expect(status).toEqual(StatusCodes.OK);
+
+      expect(body).toEqual([
+        expect.objectContaining(newSites[0]),
+        expect.objectContaining(newSites[1]),
+        expect.objectContaining(newSites[2]),
+      ]);
     });
   });
 
@@ -72,33 +131,6 @@ describe('Blocks functional tests', () => {
       expect(status).toEqual(StatusCodes.OK);
 
       expect(body).toEqual(defaultBlockedWebsites);
-    });
-  });
-  describe('When creating blocks config for a given user', () => {
-    it('should create website blocks config successfuly', async () => {
-      const newSites = [
-        {
-          url: 'youtube.com',
-        },
-        {
-          url: 'facebook.com',
-        },
-        {
-          url: 'itch.io',
-        },
-      ];
-
-      const { status, body } = await global.testRequest
-        .post('/blocks/config')
-        .set({ 'x-access-token': token })
-        .send(newSites);
-
-      expect(status).toBe(StatusCodes.CREATED);
-      expect(body).toEqual([
-        expect.objectContaining(newSites[0]),
-        expect.objectContaining(newSites[1]),
-        expect.objectContaining(newSites[2]),
-      ]);
     });
   });
 });
