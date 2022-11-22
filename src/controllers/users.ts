@@ -1,5 +1,7 @@
 import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
+import { defaultWebsitesToBlock } from '@src/clients/defaultValues/defaultWebsitesToBlock';
 import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
+import { Site } from '@src/models/site';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { Request, Response } from 'express';
@@ -15,6 +17,13 @@ export class UsersController extends BaseController {
     try {
       const user = new User(req.body);
       const newUser = await user.save();
+
+      const sitesConfig = defaultWebsitesToBlock.map(({ url }) => {
+        return { url, user: newUser.id };
+      });
+
+      await Site.insertMany(sitesConfig);
+
       res.status(StatusCodes.CREATED).send(newUser);
       return;
     } catch (error) {
