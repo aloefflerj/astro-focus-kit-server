@@ -32,7 +32,7 @@ describe('Blocks functional tests', () => {
         .set({ 'x-access-token': token });
 
       const newBlock = {
-        url: sitesBody[0].url,
+        site: sitesBody[0].id,
         blockDateTime: moment().toISOString(),
       };
 
