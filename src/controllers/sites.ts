@@ -59,11 +59,6 @@ export class SitesController extends BaseController {
     try {
       const sites = await Site.find({ user: req.decoded?.id });
 
-      if (sites.length === 0) {
-        res.status(StatusCodes.OK).send(defaultWebsitesToBlock);
-        return;
-      }
-
       res.status(StatusCodes.OK).send(sites);
       return;
     } catch (error) {
