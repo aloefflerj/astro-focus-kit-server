@@ -3,13 +3,12 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 export interface IBlock {
   _id?: string;
   blockDateTime: string;
-  url: string;
 }
 
 const schema = new mongoose.Schema(
   {
     blockDateTime: { type: String, required: true },
-    url: { type: String, required: true },
+    site: { type: Schema.Types.ObjectId, ref: 'Site', required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
