@@ -1,3 +1,4 @@
+import { defaultWebsitesToBlock } from '@src/clients/defaultValues/defaultWebsitesToBlock';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { StatusCodes } from 'http-status-codes';
@@ -13,7 +14,7 @@ describe('Users functional tests with encrypted password', () => {
       };
 
       const response = await global.testRequest.post('/users').send(newUser);
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(StatusCodes.CREATED);
       await expect(
         AuthService.comparePasswords(newUser.password, response.body.password)
       ).resolves.toBeTruthy();
@@ -21,6 +22,31 @@ describe('Users functional tests with encrypted password', () => {
         expect.objectContaining({
           ...newUser,
           ...{ password: expect.any(String) },
+        })
+      );
+    });
+
+    it('should successfully create default sites to block config', async () => {
+      const newUser = {
+        name: 'dovahkiin',
+        email: 'dovahkiin@skyrim.com',
+        password: '12345',
+      };
+
+      await global.testRequest.post('/users').send(newUser);
+
+      const { body: userBody } = await global.testRequest
+        .post('/users/auth')
+        .send({ email: newUser.email, password: newUser.password });
+
+      const { status, body } = await global.testRequest
+        .get('/sites/config')
+        .set({ 'x-access-token': userBody.token });
+
+      expect(status).toBe(StatusCodes.OK);
+      expect(body).toEqual(
+        defaultWebsitesToBlock.map(({ url }) => {
+          return expect.objectContaining({ url, user: userBody.id });
         })
       );
     });
