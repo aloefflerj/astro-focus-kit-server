@@ -34,7 +34,7 @@ describe('Reasons functional tests', () => {
       const newReason = {
         content: 'Because I forgot what I was going to do',
         reasonDateTime: moment().toISOString(),
-        site: sitesBody[0].url,
+        site: sitesBody[0].id,
       };
 
       const { status, body } = await global.testRequest
