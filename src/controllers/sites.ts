@@ -73,6 +73,29 @@ export class SitesController extends BaseController {
     this.internalServerError(res);
   }
 
+  @Get('config/:id')
+  @Middleware(restrictedOrigin)
+  public async getSiteConfigFromLoggedUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const { id } = <{ id: string }>req.params;
+      const site = await Site.findById(id);
+
+      res.status(StatusCodes.OK).send(site);
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send({ code: StatusCodes.BAD_REQUEST, error: error.message });
+        return;
+      }
+    }
+    this.internalServerError(res);
+  }
+
   @Delete('config/:id')
   @Middleware(unrestrictedOrigin)
   public async deleteSitesConfigFromLoggedUser(
