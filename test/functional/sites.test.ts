@@ -150,4 +150,35 @@ describe('Sites functional tests', () => {
       expect(body).toEqual(defaultWebsitesToBlock);
     });
   });
+
+  describe('When deleting a site config', () => {
+    it('should delete a site config with success', async () => {
+      const newSites = [
+        {
+          url: 'youtube.com',
+        },
+        {
+          url: 'facebook.com',
+        },
+        {
+          url: 'itch.io',
+        },
+      ];
+
+      await global.testRequest
+        .post('/sites/config')
+        .set({ 'x-access-token': token })
+        .send(newSites);
+
+      const { body } = await global.testRequest
+        .get('/sites/config')
+        .set({ 'x-access-token': token });
+
+      const response = await global.testRequest
+        .delete(`/sites/config/${body.id}`)
+        .set({ 'x-access-token': token });
+
+      expect(response.status).toBe(StatusCodes.NO_CONTENT);
+    });
+  });
 });
