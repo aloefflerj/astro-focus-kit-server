@@ -94,7 +94,11 @@ describe('Blocks functional tests', () => {
         .send(newSites);
 
       expect(status).toBe(StatusCodes.CREATED);
-      expect(body).toEqual(expect.objectContaining(newSites));
+      expect(body).toEqual([
+        expect.objectContaining(newSites[0]),
+        expect.objectContaining(newSites[1]),
+        expect.objectContaining(newSites[2]),
+      ]);
     });
   });
 });
