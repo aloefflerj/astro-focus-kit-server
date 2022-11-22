@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 
 describe('Users functional tests with encrypted password', () => {
   beforeEach(async () => await User.deleteMany({}));
+  afterAll(async () => await User.deleteMany({}));
   describe('When creating a new user', () => {
     it('should successfully create a new user', async () => {
       const newUser = {
@@ -26,7 +27,7 @@ describe('Users functional tests with encrypted password', () => {
       );
     });
 
-    it('should successfully create default sites to block config', async () => {
+    it('should successfully create default user sites to block config', async () => {
       const newUser = {
         name: 'dovahkiin',
         email: 'dovahkiin@skyrim.com',

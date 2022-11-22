@@ -23,6 +23,8 @@ describe('Sites functional tests', () => {
     token = AuthService.generateToken(user.toJSON());
   });
 
+  afterAll(async () => await User.deleteMany({}));
+
   describe('When creating sites config for a given user', () => {
     it('should create website sites config successfuly', async () => {
       const newSites = [
@@ -53,13 +55,28 @@ describe('Sites functional tests', () => {
 
   describe('When fetching sites from a given user', () => {
     it('should return default sites if the user has no config', async () => {
+      const newUser = {
+        name: 'dovahkiin2',
+        email: 'dovahkiin@skyrim.com2',
+        password: '12345',
+      };
+
+      await global.testRequest.post('/users').send(newUser);
+
+      const { body: userBody } = await global.testRequest
+        .post('/users/auth')
+        .send({ email: newUser.email, password: newUser.password });
+
       const { status, body } = await global.testRequest
         .get('/sites/config')
-        .set({ 'x-access-token': token });
+        .set({ 'x-access-token': userBody.token });
 
-      expect(status).toEqual(StatusCodes.OK);
-
-      expect(body).toEqual(defaultWebsitesToBlock);
+      expect(status).toBe(StatusCodes.OK);
+      expect(body).toEqual(
+        defaultWebsitesToBlock.map(({ url }) => {
+          return expect.objectContaining({ url, user: userBody.id });
+        })
+      );
     });
 
     it('should return custom sites if the user has websites config', async () => {

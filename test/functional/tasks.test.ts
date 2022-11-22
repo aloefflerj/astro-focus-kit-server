@@ -32,6 +32,11 @@ describe('Tasks functional tests', () => {
     token = AuthService.generateToken(user.toJSON());
   });
 
+  afterAll(async () => {
+    await User.deleteMany({});
+    await Task.deleteMany({});
+  });
+
   describe('When creating a task', () => {
     it('should create a task with success', async () => {
       const response = await global.testRequest
