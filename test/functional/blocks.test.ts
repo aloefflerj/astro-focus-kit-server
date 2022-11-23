@@ -45,4 +45,39 @@ describe('Blocks functional tests', () => {
       expect(body).toEqual(expect.objectContaining(newBlock));
     });
   });
+
+  describe('When fetching last block by user', () => {
+    it('should return the most recent user site block', async () => {
+      const { body: sitesBody } = await global.testRequest
+        .get('/sites/config')
+        .set({ 'x-access-token': token });
+
+      const oldestBlock = {
+        site: sitesBody[0].id,
+        blockDateTime: moment().toISOString(),
+      };
+
+      const newestBlock = {
+        site: sitesBody[0].id,
+        blockDateTime: moment().toISOString(),
+      };
+
+      await global.testRequest
+        .post('/blocks')
+        .set({ 'x-access-token': token })
+        .send(oldestBlock);
+
+      await global.testRequest
+        .post('/blocks')
+        .set({ 'x-access-token': token })
+        .send(newestBlock);
+
+      const { status, body } = await global.testRequest
+        .get('/blocks/last')
+        .set({ 'x-access-token': token });
+
+      expect(status).toBe(StatusCodes.OK);
+      expect(body).toEqual(expect.objectContaining(newestBlock));
+    });
+  });
 });
