@@ -1,6 +1,7 @@
 import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
 import { defaultWebsitesToBlock } from '@src/clients/defaultValues/defaultWebsitesToBlock';
 import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
+import { Session } from '@src/models/session';
 import { Site } from '@src/models/site';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
@@ -23,6 +24,9 @@ export class UsersController extends BaseController {
       });
 
       await Site.insertMany(sitesConfig);
+
+      const session = new Session({ status: 'focusing', user: newUser.id });
+      await session.save();
 
       res.status(StatusCodes.CREATED).send(newUser);
       return;

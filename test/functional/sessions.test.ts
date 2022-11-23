@@ -1,6 +1,5 @@
 import { User } from '@src/models/user';
 import { StatusCodes } from 'http-status-codes';
-import moment from 'moment-timezone';
 
 describe('Sessions functional tests', () => {
   const defaultUser = {

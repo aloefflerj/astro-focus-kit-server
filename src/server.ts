@@ -14,6 +14,7 @@ import { PingController } from './controllers/ping';
 import { SitesController } from './controllers/sites';
 import { BlocksController } from './controllers/blocks';
 import { ReasonsController } from './controllers/reasons';
+import { SessionsController } from './controllers/sessions';
 
 export class SetupServer extends Server {
   constructor(private port = 8614 || process.env.port) {
@@ -45,6 +46,7 @@ export class SetupServer extends Server {
     const sitesController = new SitesController();
     const blocksController = new BlocksController();
     const reasonsController = new ReasonsController();
+    const sessionsController = new SessionsController();
 
     this.addControllers([
       tasksController,
@@ -54,6 +56,7 @@ export class SetupServer extends Server {
       sitesController,
       blocksController,
       reasonsController,
+      sessionsController,
     ]);
   }
 
