@@ -38,4 +38,25 @@ describe('Sessions functional tests', () => {
       expect(body).toEqual(expect.objectContaining(newSession));
     });
   });
+
+  describe('When modifying session status', () => {
+    it('should change status to "procrastinating" on flip status', async () => {
+      const sessionNewStatus = {
+        status: 'procrastinating',
+      };
+
+      const { body } = await global.testRequest
+        .get('/session')
+        .set({ 'x-access-token': token });
+
+      const { body: sessionBody, status: sessionStatus } =
+        await global.testRequest
+          .patch(`/session/${body.id}`)
+          .set({ 'x-access-token': token })
+          .send(sessionNewStatus);
+
+      expect(sessionStatus).toBe(StatusCodes.OK);
+      expect(sessionBody).toEqual(expect.objectContaining(sessionNewStatus));
+    });
+  });
 });
