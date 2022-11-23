@@ -1,4 +1,4 @@
-import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
+import { ClassMiddleware, Controller, Get, Post } from '@overnightjs/core';
 import { authMiddleware } from '@src/middlewares/auth';
 import { unrestrictedOrigin } from '@src/middlewares/unrestrictedOrigin';
 import { Block } from '@src/models/blocks';
@@ -25,6 +25,28 @@ export class BlocksController extends BaseController {
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
         this.sendCreateUpdateErrorResponse(res, error);
+        return;
+      }
+    }
+    this.internalServerError(res);
+  }
+
+  @Get('last')
+  public async getLastBlockByUser(req: Request, res: Response): Promise<void> {
+    try {
+      const block = await Block.findOne(
+        { user: req.decoded?.id },
+        {},
+        { sort: { blockDateTime: -1 } }
+      );
+
+      res.status(StatusCodes.OK).send(block);
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send({ code: StatusCodes.BAD_REQUEST, error: error.message });
         return;
       }
     }

@@ -6,7 +6,6 @@ import {
   Patch,
 } from '@overnightjs/core';
 import { authMiddleware } from '@src/middlewares/auth';
-import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
 import { unrestrictedOrigin } from '@src/middlewares/unrestrictedOrigin';
 import { Session } from '@src/models/session';
 import { Request, Response } from 'express';
