@@ -61,5 +61,23 @@ describe('Sessions functional tests', () => {
       expect(sessionStatus).toBe(StatusCodes.NO_CONTENT);
       expect(sessionBody).toEqual(expect.objectContaining(sessionNewStatus));
     });
+
+    it('should change status when searching by user without session id', async () => {
+      const sessionNewStatus = {
+        status: 'procrastinating',
+      };
+
+      const { status: sessionStatus } = await global.testRequest
+        .patch('/session')
+        .set({ 'x-access-token': token })
+        .send(sessionNewStatus);
+
+      const { body: sessionBody } = await global.testRequest
+        .get('/session')
+        .set({ 'x-access-token': token });
+
+      expect(sessionStatus).toBe(StatusCodes.NO_CONTENT);
+      expect(sessionBody).toEqual(expect.objectContaining(sessionNewStatus));
+    });
   });
 });
