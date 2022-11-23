@@ -31,7 +31,7 @@ describe('Sessions functional tests', () => {
       };
 
       const { status, body } = await global.testRequest
-        .get('/session')
+        .get('/sessions')
         .set({ 'x-access-token': token });
 
       expect(status).toBe(StatusCodes.CREATED);
@@ -46,16 +46,16 @@ describe('Sessions functional tests', () => {
       };
 
       const { body } = await global.testRequest
-        .get('/session')
+        .get('/sessions')
         .set({ 'x-access-token': token });
 
       const { status: sessionStatus } = await global.testRequest
-        .patch(`/session/${body.id}`)
+        .patch(`/sessions/${body.id}`)
         .set({ 'x-access-token': token })
         .send(sessionNewStatus);
 
       const { body: sessionBody } = await global.testRequest
-        .get('/session')
+        .get('/sessions')
         .set({ 'x-access-token': token });
 
       expect(sessionStatus).toBe(StatusCodes.NO_CONTENT);
@@ -68,12 +68,12 @@ describe('Sessions functional tests', () => {
       };
 
       const { status: sessionStatus } = await global.testRequest
-        .patch('/session')
+        .patch('/sessions')
         .set({ 'x-access-token': token })
         .send(sessionNewStatus);
 
       const { body: sessionBody } = await global.testRequest
-        .get('/session')
+        .get('/sessions')
         .set({ 'x-access-token': token });
 
       expect(sessionStatus).toBe(StatusCodes.NO_CONTENT);

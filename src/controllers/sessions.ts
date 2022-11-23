@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
 import { BaseController } from '.';
 
-@Controller('session')
+@Controller('sessions')
 @ClassMiddleware(authMiddleware)
 @ClassMiddleware(restrictedOrigin)
 export class SessionsController extends BaseController {
