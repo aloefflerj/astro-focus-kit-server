@@ -49,13 +49,16 @@ describe('Sessions functional tests', () => {
         .get('/session')
         .set({ 'x-access-token': token });
 
-      const { body: sessionBody, status: sessionStatus } =
-        await global.testRequest
-          .patch(`/session/${body.id}`)
-          .set({ 'x-access-token': token })
-          .send(sessionNewStatus);
+      const { status: sessionStatus } = await global.testRequest
+        .patch(`/session/${body.id}`)
+        .set({ 'x-access-token': token })
+        .send(sessionNewStatus);
 
-      expect(sessionStatus).toBe(StatusCodes.OK);
+      const { body: sessionBody } = await global.testRequest
+        .get('/session')
+        .set({ 'x-access-token': token });
+
+      expect(sessionStatus).toBe(StatusCodes.NO_CONTENT);
       expect(sessionBody).toEqual(expect.objectContaining(sessionNewStatus));
     });
   });
