@@ -1,6 +1,13 @@
-import { ClassMiddleware, Controller, Get, Patch } from '@overnightjs/core';
+import {
+  ClassMiddleware,
+  Controller,
+  Get,
+  Middleware,
+  Patch,
+} from '@overnightjs/core';
 import { authMiddleware } from '@src/middlewares/auth';
 import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
+import { unrestrictedOrigin } from '@src/middlewares/unrestrictedOrigin';
 import { Session } from '@src/models/session';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -9,13 +16,13 @@ import { BaseController } from '.';
 
 @Controller('sessions')
 @ClassMiddleware(authMiddleware)
-@ClassMiddleware(restrictedOrigin)
 export class SessionsController extends BaseController {
   constructor() {
     super();
   }
 
   @Get('')
+  @Middleware(unrestrictedOrigin)
   public async getUserSession(req: Request, res: Response): Promise<void> {
     try {
       const result = await Session.find({ user: req.decoded?.id });
@@ -33,6 +40,7 @@ export class SessionsController extends BaseController {
   }
 
   @Patch(':id')
+  @Middleware(unrestrictedOrigin)
   public async updateStatus(req: Request, res: Response): Promise<void> {
     try {
       const { id } = <{ id: string }>req.params;
@@ -59,6 +67,7 @@ export class SessionsController extends BaseController {
   }
 
   @Patch('')
+  @Middleware(unrestrictedOrigin)
   public async updateStatusByUser(req: Request, res: Response): Promise<void> {
     try {
       const { status } = req.body;

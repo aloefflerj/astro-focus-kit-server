@@ -1,6 +1,6 @@
 import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
 import { authMiddleware } from '@src/middlewares/auth';
-import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
+import { unrestrictedOrigin } from '@src/middlewares/unrestrictedOrigin';
 import { Block } from '@src/models/blocks';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -9,7 +9,7 @@ import { BaseController } from '.';
 
 @Controller('blocks')
 @ClassMiddleware(authMiddleware)
-@ClassMiddleware(restrictedOrigin)
+@ClassMiddleware(unrestrictedOrigin)
 export class BlocksController extends BaseController {
   constructor() {
     super();
