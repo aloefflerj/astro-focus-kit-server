@@ -1,3 +1,4 @@
+import { Reason } from '@src/models/reasons';
 import { User } from '@src/models/user';
 import { StatusCodes } from 'http-status-codes';
 import moment from 'moment-timezone';
@@ -13,16 +14,17 @@ describe('Reasons functional tests', () => {
 
   beforeEach(async () => {
     await global.testRequest.post('/users').send(defaultUser);
-
     const { body: userBody } = await global.testRequest
       .post('/users/auth')
       .send({ email: defaultUser.email, password: defaultUser.password });
-
     token = userBody.token;
+
+    await Reason.deleteMany({});
   });
 
   afterAll(async () => {
     await User.deleteMany({});
+    await Reason.deleteMany({});
   });
 
   describe('When a given user answer why he wants to procrastinate', () => {
@@ -44,6 +46,46 @@ describe('Reasons functional tests', () => {
 
       expect(status).toBe(StatusCodes.CREATED);
       expect(body).toEqual(expect.objectContaining(newReason));
+    });
+  });
+
+  describe('When fetching reasons from a give user', () => {
+    it('should return reasons that he registered', async () => {
+      const { body: sitesBody } = await global.testRequest
+        .get('/sites/config')
+        .set({ 'x-access-token': token });
+
+      const newReason1 = {
+        content: 'Because I forgot what I was going to do',
+        reasonDateTime: moment().toISOString(),
+        site: sitesBody[0].id,
+      };
+
+      const newReason2 = {
+        content: 'Because it is raining',
+        reasonDateTime: moment().toISOString(),
+        site: sitesBody[0].id,
+      };
+
+      await global.testRequest
+        .post('/reasons')
+        .set({ 'x-access-token': token })
+        .send(newReason1);
+
+      await global.testRequest
+        .post('/reasons')
+        .set({ 'x-access-token': token })
+        .send(newReason2);
+
+      const { status, body } = await global.testRequest
+        .get('/reasons')
+        .set({ 'x-access-token': token });
+
+      expect(status).toBe(StatusCodes.OK);
+      expect(body).toEqual([
+        expect.objectContaining(newReason1),
+        expect.objectContaining(newReason2),
+      ]);
     });
   });
 });
