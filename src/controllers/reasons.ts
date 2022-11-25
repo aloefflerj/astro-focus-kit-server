@@ -1,4 +1,4 @@
-import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
+import { ClassMiddleware, Controller, Get, Post } from '@overnightjs/core';
 import { authMiddleware } from '@src/middlewares/auth';
 import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
 import { Reason } from '@src/models/reasons';
@@ -13,6 +13,29 @@ import { BaseController } from '.';
 export class ReasonsController extends BaseController {
   constructor() {
     super();
+  }
+
+  @Get('')
+  public async getReasonsFromLoggedUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const reason = await Reason.find({
+        user: req.decoded?.id,
+      });
+      res.status(StatusCodes.OK).send(reason);
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send({ code: StatusCodes.BAD_REQUEST, error: error.message });
+        return;
+      }
+
+      this.internalServerError(res);
+    }
   }
 
   @Post('')
