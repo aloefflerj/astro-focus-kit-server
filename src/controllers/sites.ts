@@ -24,7 +24,7 @@ export class SitesController extends BaseController {
     super();
   }
 
-  @Post('config')
+  @Post('')
   @Middleware(restrictedOrigin)
   public async newSitesConfigForLoggedUser(
     req: Request,
@@ -51,7 +51,7 @@ export class SitesController extends BaseController {
     this.internalServerError(res);
   }
 
-  @Get('config')
+  @Get('')
   @Middleware(restrictedOrigin)
   public async getSitesConfigFromLoggedUser(
     req: Request,
@@ -73,66 +73,7 @@ export class SitesController extends BaseController {
     this.internalServerError(res);
   }
 
-  @Get('config/:id')
-  @Middleware(restrictedOrigin)
-  public async getSiteConfigFromLoggedUser(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    try {
-      const { id } = <{ id: string }>req.params;
-      const site = await Site.findById(id);
-
-      res.status(StatusCodes.OK).send(site);
-      return;
-    } catch (error) {
-      if (error instanceof mongoose.Error.ValidationError) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({ code: StatusCodes.BAD_REQUEST, error: error.message });
-        return;
-      }
-    }
-    this.internalServerError(res);
-  }
-
-  @Delete('config/:id')
-  @Middleware(unrestrictedOrigin)
-  public async deleteSitesConfigFromLoggedUser(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    const { id } = <{ id: string }>req.params;
-
-    try {
-      const response = await Site.findById(id);
-      if (!response) {
-        res
-          .status(StatusCodes.NOT_FOUND)
-          .send({ code: StatusCodes.NOT_FOUND, error: 'Site not found' });
-        return;
-      }
-
-      await Site.findByIdAndDelete(id);
-
-      res.status(StatusCodes.NO_CONTENT).send();
-    } catch (error) {
-      if (error instanceof mongoose.Error.ValidationError) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          error: error.message,
-        });
-        return;
-      }
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-        code: StatusCodes.INTERNAL_SERVER_ERROR,
-        error: (error as Error).message,
-      });
-      return;
-    }
-  }
-
-  @Get('')
+  @Get('block')
   @Middleware(unrestrictedOrigin)
   public async getSitesFromLoggedUser(
     req: Request,
@@ -171,6 +112,65 @@ export class SitesController extends BaseController {
       }
 
       this.internalServerError(res);
+    }
+  }
+
+  @Get(':id')
+  @Middleware(restrictedOrigin)
+  public async getSiteConfigFromLoggedUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const { id } = <{ id: string }>req.params;
+      const site = await Site.findById(id);
+
+      res.status(StatusCodes.OK).send(site);
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .send({ code: StatusCodes.BAD_REQUEST, error: error.message });
+        return;
+      }
+    }
+    this.internalServerError(res);
+  }
+
+  @Delete(':id')
+  @Middleware(unrestrictedOrigin)
+  public async deleteSitesConfigFromLoggedUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    const { id } = <{ id: string }>req.params;
+
+    try {
+      const response = await Site.findById(id);
+      if (!response) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .send({ code: StatusCodes.NOT_FOUND, error: 'Site not found' });
+        return;
+      }
+
+      await Site.findByIdAndDelete(id);
+
+      res.status(StatusCodes.NO_CONTENT).send();
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          error: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: (error as Error).message,
+      });
+      return;
     }
   }
 }
