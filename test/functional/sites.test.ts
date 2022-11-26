@@ -194,7 +194,7 @@ describe('Sites functional tests', () => {
         .get('/sites')
         .set({ 'x-access-token': token });
 
-      const { status, body } = await global.testRequest
+      const { status } = await global.testRequest
         .patch(`/sites/${oldBody[0].id}`)
         .set({ 'x-access-token': token })
         .send([
@@ -203,11 +203,15 @@ describe('Sites functional tests', () => {
           },
         ]);
 
-      expect(status).toEqual(StatusCodes.OK);
+      const { body } = await global.testRequest
+        .get('/sites')
+        .set({ 'x-access-token': token });
+
+      expect(status).toEqual(StatusCodes.NO_CONTENT);
       expect(body).toEqual([
-        {
+        expect.objectContaining({
           url: 'facebook.com',
-        },
+        }),
       ]);
     });
   });
