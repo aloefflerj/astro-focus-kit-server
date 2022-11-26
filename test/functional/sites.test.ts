@@ -177,6 +177,41 @@ describe('Sites functional tests', () => {
     });
   });
 
+  describe('When updating a site config', () => {
+    it('should update the value accordantly', async () => {
+      const newSite = [
+        {
+          url: 'youtube.com',
+        },
+      ];
+
+      await global.testRequest
+        .post('/sites')
+        .set({ 'x-access-token': token })
+        .send(newSite);
+
+      const { body: oldBody } = await global.testRequest
+        .get('/sites')
+        .set({ 'x-access-token': token });
+
+      const { status, body } = await global.testRequest
+        .patch(`/sites/${oldBody[0].id}`)
+        .set({ 'x-access-token': token })
+        .send([
+          {
+            url: 'facebook.com',
+          },
+        ]);
+
+      expect(status).toEqual(StatusCodes.OK);
+      expect(body).toEqual([
+        {
+          url: 'facebook.com',
+        },
+      ]);
+    });
+  });
+
   describe('When deleting a site config', () => {
     it('should delete a site config with success', async () => {
       const newSites = [
