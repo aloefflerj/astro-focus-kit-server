@@ -41,7 +41,7 @@ describe('Users functional tests with encrypted password', () => {
         .send({ email: newUser.email, password: newUser.password });
 
       const { status, body } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': userBody.token });
 
       expect(status).toBe(StatusCodes.OK);

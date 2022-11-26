@@ -28,7 +28,7 @@ describe('Blocks functional tests', () => {
   describe('When blocking a website', () => {
     it('should create a log of the site block', async () => {
       const { body: sitesBody } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       const newBlock = {
@@ -49,7 +49,7 @@ describe('Blocks functional tests', () => {
   describe('When fetching last block by user', () => {
     it('should return the most recent user site block', async () => {
       const { body: sitesBody } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       const oldestBlock = {

@@ -30,7 +30,7 @@ describe('Reasons functional tests', () => {
   describe('When a given user answer why he wants to procrastinate', () => {
     it('it should save the reason', async () => {
       const { body: sitesBody } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       const newReason = {
@@ -52,7 +52,7 @@ describe('Reasons functional tests', () => {
   describe('When fetching reasons from a give user', () => {
     it('should return reasons that he registered', async () => {
       const { body: sitesBody } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       const newReason1 = {
