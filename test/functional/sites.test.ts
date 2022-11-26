@@ -40,7 +40,7 @@ describe('Sites functional tests', () => {
       ];
 
       const { status, body } = await global.testRequest
-        .post('/sites/config')
+        .post('/sites')
         .set({ 'x-access-token': token })
         .send(newSites);
 
@@ -68,7 +68,7 @@ describe('Sites functional tests', () => {
         .send({ email: newUser.email, password: newUser.password });
 
       const { status, body } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': userBody.token });
 
       expect(status).toBe(StatusCodes.OK);
@@ -93,12 +93,12 @@ describe('Sites functional tests', () => {
       ];
 
       await global.testRequest
-        .post('/sites/config')
+        .post('/sites')
         .set({ 'x-access-token': token })
         .send(newSites);
 
       const { status, body } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
@@ -124,12 +124,12 @@ describe('Sites functional tests', () => {
       ];
 
       const { body: sitesBody } = await global.testRequest
-        .post('/sites/config')
+        .post('/sites')
         .set({ 'x-access-token': token })
         .send(newSites);
 
       const { status, body } = await global.testRequest
-        .get(`/sites/config/${sitesBody[0].id}`)
+        .get(`/sites/${sitesBody[0].id}`)
         .set({ 'x-access-token': token });
 
       expect(status).toBe(StatusCodes.OK);
@@ -140,7 +140,7 @@ describe('Sites functional tests', () => {
   describe('When fetching sites from a given user with tasks setted', () => {
     it('should return empty if the user has no task registered today', async () => {
       const { status, body } = await global.testRequest
-        .get('/sites')
+        .get('/sites/block')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
@@ -168,7 +168,7 @@ describe('Sites functional tests', () => {
         .send(newTask);
 
       const { status, body } = await global.testRequest
-        .get('/sites')
+        .get('/sites/block')
         .set({ 'x-access-token': token });
 
       expect(status).toEqual(StatusCodes.OK);
@@ -192,16 +192,16 @@ describe('Sites functional tests', () => {
       ];
 
       await global.testRequest
-        .post('/sites/config')
+        .post('/sites')
         .set({ 'x-access-token': token })
         .send(newSites);
 
       const { body } = await global.testRequest
-        .get('/sites/config')
+        .get('/sites')
         .set({ 'x-access-token': token });
 
       const response = await global.testRequest
-        .delete(`/sites/config/${body[0].id}`)
+        .delete(`/sites/${body[0].id}`)
         .set({ 'x-access-token': token });
 
       expect(response.status).toBe(StatusCodes.NO_CONTENT);
