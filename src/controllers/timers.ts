@@ -45,6 +45,7 @@ export class TimersController extends BaseController {
   }
 
   @Patch(':id')
+  @Middleware(restrictedOrigin)
   public async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = <{ id: string }>req.params;
