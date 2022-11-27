@@ -1,8 +1,10 @@
 import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
 import { defaultWebsitesToBlock } from '@src/clients/defaultValues/defaultWebsitesToBlock';
+import { defaultTimerValue } from '@src/clients/defaultValues/defaultTimerValue';
 import { restrictedOrigin } from '@src/middlewares/restrictedOrigin';
 import { Session } from '@src/models/session';
 import { Site } from '@src/models/site';
+import { Timer } from '@src/models/timer';
 import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { Request, Response } from 'express';
@@ -27,6 +29,9 @@ export class UsersController extends BaseController {
 
       const session = new Session({ status: 'focusing', user: newUser.id });
       await session.save();
+
+      const timers = new Timer({ time: defaultTimerValue, user: newUser.id });
+      await timers.save();
 
       res.status(StatusCodes.CREATED).send(newUser);
       return;
