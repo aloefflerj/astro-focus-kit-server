@@ -43,4 +43,30 @@ export class TimersController extends BaseController {
     }
     this.internalServerError(res);
   }
+
+  @Patch(':id')
+  public async update(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = <{ id: string }>req.params;
+
+      const response = await Timer.findByIdAndUpdate(id, req.body);
+
+      if (!response) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .send({ code: StatusCodes.NOT_FOUND, error: 'Timer not found' });
+
+        return;
+      }
+
+      res.status(StatusCodes.NO_CONTENT).send();
+      return;
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        this.sendCreateUpdateErrorResponse(res, error);
+        return;
+      }
+    }
+    this.internalServerError(res);
+  }
 }
