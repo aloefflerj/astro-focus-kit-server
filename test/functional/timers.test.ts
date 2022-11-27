@@ -2,7 +2,6 @@ import { defaultTimerValue } from '@src/clients/defaultValues/defaultTimerValue'
 import { Timer } from '@src/models/timer';
 import { User } from '@src/models/user';
 import { StatusCodes } from 'http-status-codes';
-import moment from 'moment-timezone';
 
 describe('Timers functional tests', () => {
   const defaultUser = {
@@ -19,8 +18,6 @@ describe('Timers functional tests', () => {
       .post('/users/auth')
       .send({ email: defaultUser.email, password: defaultUser.password });
     token = userBody.token;
-
-    await Timer.deleteMany({});
   });
 
   afterAll(async () => {
@@ -29,7 +26,7 @@ describe('Timers functional tests', () => {
   });
 
   describe('When fetching timer config from a given user', () => {
-    it.only('should return default timer config if it had not been configured yet', async () => {
+    it('should return default timer config if it had not been configured yet', async () => {
       await global.testRequest.post('/users').send(defaultUser);
 
       const { body: userBody } = await global.testRequest
@@ -44,6 +41,32 @@ describe('Timers functional tests', () => {
       expect(body).toEqual(
         expect.objectContaining({ time: defaultTimerValue })
       );
+    });
+  });
+
+  describe('When updating a timer config', () => {
+    it('should update the value accordantly', async () => {
+      await global.testRequest.post('/users').send(defaultUser);
+
+      const { body: userBody } = await global.testRequest
+        .post('/users/auth')
+        .send({ email: defaultUser.email, password: defaultUser.password });
+
+      const { body: timerBody } = await global.testRequest
+        .get('/timers')
+        .set({ 'x-access-token': userBody.token });
+
+      const { status } = await global.testRequest
+        .patch(`/timers/${timerBody.id}`)
+        .set({ 'x-access-token': token })
+        .send({ time: 50 });
+
+      const { body: updatedTimerBody } = await global.testRequest
+        .get('/timers')
+        .set({ 'x-access-token': token });
+
+      expect(status).toEqual(StatusCodes.NO_CONTENT);
+      expect(updatedTimerBody).toEqual(expect.objectContaining({ time: 50 }));
     });
   });
 });
