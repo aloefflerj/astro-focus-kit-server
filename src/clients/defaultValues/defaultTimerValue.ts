@@ -1,1 +1,1 @@
-export const defaultTimerValue = 20;
+export const defaultTimerValue = 2;
